@@ -1,5 +1,13 @@
 'use strict';
 
+var login = require('connect-ensure-login');
+
+/*
+ * See the documentation in connect-ensure-login
+ */
+exports.ensureLoggedIn = login.ensureLoggedIn;
+exports.ensureNotLoggedIn = login.ensureNotLoggedIn;
+
 /**
  * Generic require login routing middleware
  */

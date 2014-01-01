@@ -1,0 +1,19 @@
+extends layouts/default
+
+block content
+    form.decision.form-horizontal(action="/oauth2/authorize/decision", method="post")
+        input(type='hidden', name="transaction_id", value='#{transactionID}')
+
+        h2 Decision
+        div Authorization Server
+
+        p= user.name
+        p The application
+            b= myclient.name
+            is requesting access to your account.
+
+        p.warning Do You Approve?
+
+        .form-actions
+          button#all.btn.btn-primary(type='submit') Accept
+          button#deny.btn(type='submit', name='cancel') Deny

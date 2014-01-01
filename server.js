@@ -45,13 +45,16 @@ walk(models_path);
 //bootstrap passport config
 require('./config/passport')(passport);
 
+//bootstrap oauth2orize config
+var oauth2 = require('./config/oauth2')(passport);
+
 var app = express();
 
 //express settings
 require('./config/express')(app, passport, db);
 
 //Bootstrap routes
-require('./config/routes')(app, passport, auth);
+require('./config/routes')(app, passport, auth, oauth2);
 
 //Start the app by listening on <port>
 var port = process.env.PORT || config.port;

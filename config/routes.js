@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(app, passport, auth) {
+module.exports = function(app, passport, auth, oauth2) {
     //User Routes
     var users = require('../app/controllers/users');
     app.get('/signin', users.signin);
@@ -16,6 +16,22 @@ module.exports = function(app, passport, auth) {
         failureRedirect: '/signin',
         failureFlash: true
     }), users.session);
+
+    // setting up the OAuth2orize routes
+    app.get('/oauth2/authorize', auth.ensureLoggedIn('/signin'), oauth2.authorization);
+    app.post('/oauth2/authorize/decision', auth.ensureLoggedIn('/signin'), oauth2.decision);
+    app.post('/oauth2/token', oauth2.token);
+
+    app.get('/oauth2/token', oauth2.token); //TODO: delete me
+
+    // Mimicking google's token info endpoint from
+    // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
+    var tokens = require('../app/controllers/tokens');
+    app.get('/oauth2/tokeninfo', tokens.info);
+
+    app.get('/api/users/me',passport.authenticate('bearer', {
+      session: false
+    }),users.me); //  TODO: delete me?
 
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {

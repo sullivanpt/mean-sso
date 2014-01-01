@@ -4,3 +4,8 @@
 node_modules/
 public/lib
 test/coverage/
+
+*.iml
+*.ipr
+*.iws
+.idea/
