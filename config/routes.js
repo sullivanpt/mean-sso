@@ -13,6 +13,7 @@ module.exports = function(app, passport, auth, oauth2) {
 
     //Setting the local strategy route
     app.post('/users/session', passport.authenticate('local', {
+        successReturnToOrRedirect: '/',
         failureRedirect: '/signin',
         failureFlash: true
     }), users.session);
