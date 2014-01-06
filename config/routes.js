@@ -41,6 +41,7 @@ module.exports = function(app, passport, auth, oauth2) {
     }), users.signin);
 
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+        successReturnToOrRedirect: '/',
         failureRedirect: '/signin'
     }), users.authCallback);
 
@@ -50,6 +51,7 @@ module.exports = function(app, passport, auth, oauth2) {
     }), users.signin);
 
     app.get('/auth/github/callback', passport.authenticate('github', {
+        successReturnToOrRedirect: '/',
         failureRedirect: '/signin'
     }), users.authCallback);
 
@@ -59,6 +61,7 @@ module.exports = function(app, passport, auth, oauth2) {
     }), users.signin);
 
     app.get('/auth/twitter/callback', passport.authenticate('twitter', {
+        successReturnToOrRedirect: '/',
         failureRedirect: '/signin'
     }), users.authCallback);
 
@@ -72,6 +75,7 @@ module.exports = function(app, passport, auth, oauth2) {
     }), users.signin);
 
     app.get('/auth/google/callback', passport.authenticate('google', {
+        successReturnToOrRedirect: '/',
         failureRedirect: '/signin'
     }), users.authCallback);
 
