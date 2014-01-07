@@ -10,7 +10,8 @@ var mongoose = require('mongoose'),
   clients = require('../app/models/client'),
   accessTokens = require('../app/models/access-token'),
   refreshTokens = require('../app/models/refresh-token'),
-  authorizationCodes = require('../app/models/authorization-code');
+  authorizationCodes = require('../app/models/authorization-code'),
+  querystring = require('querystring');
 
 module.exports = function (passport) {
 
@@ -226,7 +227,13 @@ module.exports = function (passport) {
    * first, and rendering the `dialog` view.
    */
   var _authorization = [
-    server.authorization(function (clientID, redirectURI, scope, done) {
+      function(req, res, next) { // default used by CAS clients
+          if (!req.query['response_type']) {
+              req.query['response_type'] = 'code';
+          }
+          next();
+      },
+      server.authorization(function (clientID, redirectURI, scope, done) {
       clients.findByClientId(clientID, function (err, client) {
         if (err) {
           return done(err);
@@ -280,7 +287,7 @@ module.exports = function (passport) {
    * authenticate when making requests to this endpoint.
    */
   var _token = [
-    function(req, res, next) {
+    function(req, res, next) { // default used by CAS clients
       Object.keys(req.query).forEach(function (val) {
         req.body[val] = req.query[val];
       });
@@ -293,6 +300,40 @@ module.exports = function (passport) {
     server.token(),
     server.errorHandler()
   ];
+
+    /**
+     * Special version of token formats results as form url for CAS clients
+     * @type {Array}
+     * @private
+     */
+    var _formToken = [
+        function(req, res, next) { // default used by CAS clients
+            Object.keys(req.query).forEach(function (val) {
+                req.body[val] = req.query[val];
+            });
+            if (!req.body['grant_type']) {
+                req.body['grant_type'] = 'authorization_code';
+            }
+            next();
+        },
+        passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+        function(req, res, next) {
+            var myRes = {
+                setHeader: function(arg1, arg2) {
+                    if (arg1 =='Content-Type') {
+                        arg2 = 'application/x-www-form-urlencoded';
+                    }
+                    res.setHeader(arg1, arg2);
+                },
+                end: function (arg1) {
+                    var formData = querystring.stringify(JSON.parse(arg1));
+                    res.end(formData);
+                }
+            };
+            server.token()(req, myRes, next);
+        },
+        server.errorHandler()
+    ];
 
 // Register serialialization and deserialization functions.
 //
@@ -323,6 +364,7 @@ module.exports = function (passport) {
   return {
     authorization: _authorization,
     decision: _decision,
-    token: _token
+    token: _token,
+    formToken: _formToken
   };
 }

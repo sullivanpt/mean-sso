@@ -34,6 +34,13 @@ module.exports = function(app, passport, auth, oauth2) {
       session: false
     }),users.me); //  TODO: delete me?
 
+    // CAS OAuth emulation points
+    app.get('/cas/oauth2.0/authorize', auth.ensureLoggedIn('/signin'), oauth2.authorization);
+    app.get('/cas/oauth2.0/accessToken', oauth2.formToken);
+    app.get('/cas/oauth2.0/profile',passport.authenticate('bearer', {
+        session: false
+    }),users.casProfile);
+
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
         scope: ['email', 'user_about_me'],
