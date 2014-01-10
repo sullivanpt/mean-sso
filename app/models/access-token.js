@@ -2,6 +2,7 @@
 //You will use these to access your end point data through the means outlined
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
+'use strict';
 
 /**
  * Tokens in-memory data structure which stores all of the access tokens
@@ -16,8 +17,8 @@ var tokens = {};
  * @returns The access token if found, otherwise returns null
  */
 exports.find = function (key, done) {
-  var token = tokens[key];
-  return done(null, token);
+    var token = tokens[key];
+    return done(null, token);
 };
 
 /**
@@ -31,8 +32,8 @@ exports.find = function (key, done) {
  * @returns returns this with null
  */
 exports.save = function (token, expirationDate, userID, clientID, scope, done) {
-  tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
-  return done(null);
+    tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
+    return done(null);
 };
 
 /**
@@ -40,9 +41,9 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
  * @param key The access token to delete
  * @param done returns this when done
  */
-exports.delete = function(key, done) {
-  delete tokens[key];
-  return done(null);
+exports.delete = function (key, done) {
+    delete tokens[key];
+    return done(null);
 };
 
 /**
@@ -51,28 +52,28 @@ exports.delete = function(key, done) {
  * @param done returns this when done.
  * @returns done
  */
-exports.removeExpired = function(done) {
-  var tokensToDelete = [];
-  for (var key in tokens) {
-    if (tokens.hasOwnProperty(key)) {
-      var token = tokens[key];
-      if(new Date() > token.expirationDate) {
-        tokensToDelete.push(key);
-      }
+exports.removeExpired = function (done) {
+    var tokensToDelete = [];
+    for (var key in tokens) {
+        if (tokens.hasOwnProperty(key)) {
+            var token = tokens[key];
+            if (new Date() > token.expirationDate) {
+                tokensToDelete.push(key);
+            }
+        }
     }
-  }
-  for(var i = 0; i < tokensToDelete.length; ++i) {
-    console.log("Deleting token:" + key);
-    delete tokens[tokensToDelete[i]];
-  }
-  return done(null);
+    for (var i = 0; i < tokensToDelete.length; ++i) {
+        console.log('Deleting token:' + key);
+        delete tokens[tokensToDelete[i]];
+    }
+    return done(null);
 };
 
 /**
  * Removes all access tokens.
  * @param done returns this when done.
  */
-exports.removeAll = function(done) {
-  tokens = {};
-  return done(null);
+exports.removeAll = function (done) {
+    tokens = {};
+    return done(null);
 };

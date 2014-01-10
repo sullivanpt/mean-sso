@@ -2,6 +2,7 @@
 //You will use these to get the access codes to get to the data in your endpoints as outlined
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
+'use strict';
 
 /**
  * Authorization codes in-memory data structure which stores all of the authorization codes
@@ -16,8 +17,8 @@ var codes = {};
  * @returns The authorization code if found, otherwise returns null
  */
 exports.find = function (key, done) {
-  var code = codes[key];
-  return done(null, code);
+    var code = codes[key];
+    return done(null, code);
 };
 
 /**
@@ -31,8 +32,8 @@ exports.find = function (key, done) {
  * @returns returns this with null
  */
 exports.save = function (code, clientID, redirectURI, userID, scope, done) {
-  codes[code] = { clientID: clientID, redirectURI: redirectURI, userID: userID, scope: scope };
-  return done(null);
+    codes[code] = { clientID: clientID, redirectURI: redirectURI, userID: userID, scope: scope };
+    return done(null);
 };
 
 /**
@@ -40,8 +41,8 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
  * @param key The authorization code to delete
  * @param done Calls this with null always
  */
-exports.delete = function(key, done) {
-  delete codes[key];
-  return done(null);
+exports.delete = function (key, done) {
+    delete codes[key];
+    return done(null);
 };
 
