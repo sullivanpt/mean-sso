@@ -2,9 +2,18 @@
 
 Primitive Node.js SSO based on the MEAN Stack and Oauth2orize middleware.
 
+Project Goals:
+* Create a stand-alone SSO supporting OAuth2.0 clients, simple JASIG CAS clients, including JASIG CAS Auth2 server.
+* Option to delegate primary user login to multiple third party providers, especially Facebook.
+* Authenticate and Authorize API using cookies or bearer tokens and role based security.
+* Web based configuration with role based authorization.
+* Primitive CMS with web configuration interface.
+
+
 MEAN is a boilerplate that provides a nice starting point for [MongoDB](http://www.mongodb.org/), [Node.js](http://www.nodejs.org/), [Express](http://expressjs.com/), and [AngularJS](http://angularjs.org/) based applications. It is designed to give you quick and organized way to start developing of MEAN based web apps with useful modules like mongoose and passport pre-bundled and configured. We mainly try to take care of the connection points between existing popular frameworks and solve common integration problems.
 OAuth2orizeRecipes (https://github.com/FrankHassanabad/Oauth2orizeRecipes.git) is OAuth2 security recipes and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
+## TODO: Finishe the README. Right now the remainder of this file is the mean-seed readme unedited
 
 ## Prerequisites
 * Node.js - Download and Install [Node.js](http://www.nodejs.org/download/). You can also follow [this gist](https://gist.github.com/isaacs/579814) for a quick and easy way to install Node.js and npm

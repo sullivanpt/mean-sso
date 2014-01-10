@@ -3,7 +3,7 @@
     "description": "MEAN SSO - A simple SSO and CMS based on MEAN and Oauth2orize.",
     "version": "0.1.2",
     "private": false,
-    "author": "Amos Haviv",
+    "author": "Patrick Sullivan",
     "repository": {
         "type": "git",
         "url": "https://github.com/linnovate/mean.git"
