@@ -96,7 +96,7 @@ module.exports = function(app, passport, auth, oauth2) {
     // CAS OAuth emulation points
     app.get('/cas/oauth2.0/authorize', auth.ensureLoggedIn, oauth2.authorization);
     app.get('/cas/oauth2.0/accessToken', oauth2.formToken);
-    app.get('/cas/oauth2.0/profile', apiAuthenticate, users.casProfile);
+    app.get('/cas/oauth2.0/profile', apiAuthenticate, oauth2.casProfile);
 
     //Article Routes
     var articles = require('../app/controllers/articles');

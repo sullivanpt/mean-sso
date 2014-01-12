@@ -87,15 +87,6 @@ exports.me = function(req, res) {
 };
 
 /**
- * Exports user profile as CAS clients expect it
- * @param req
- * @param res
- */
-exports.casProfile = function(req, res) {
-    res.jsonp({ id: req.user.username, attributes: [{code:'SUCCESS'}] });
-};
-
-/**
  * Find user by id
  */
 exports.user = function(req, res, next, id) {
