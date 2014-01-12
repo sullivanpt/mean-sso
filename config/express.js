@@ -35,6 +35,11 @@ module.exports = function(app, passport, db) {
     //Enable jsonp
     app.enable("jsonp callback");
 
+    //Enable reverse proxy
+    //  detect X-Forwarded-Proto with req.secure
+    //  req.ip, req.ips from X-Forwarded-For
+    app.enable('trust proxy');
+
     app.configure(function() {
         //cookieParser should be above session
         app.use(express.cookieParser());
@@ -62,6 +67,14 @@ module.exports = function(app, passport, db) {
         //use passport session
         app.use(passport.initialize());
         app.use(passport.session());
+
+        //warn when not SSL
+        app.use(function (req, res, next) {
+            if (!req.secure) {
+                req.flash('warning', 'Non-secure connection. We recommend you log in over HTTPS.');
+            }
+            next();
+        });
 
         //routes should be at the last
         app.use(app.router);

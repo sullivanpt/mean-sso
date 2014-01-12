@@ -5,5 +5,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.face
     .navbar.navbar-inverse.navbar-fixed-top(data-ng-include="'views/header.html'", data-role="navigation")
     section.content
       section.container
+        each msg in errors
+          .alert.alert-block.alert-error= msg
+        each msg in warning
+          .alert.alert-block.alert-warning= msg
+        each msg in info
+          .alert.alert-block.alert-info= msg
+        each msg in success
+          .alert.alert-block.alert-success= msg
         block content
     include ../includes/foot
