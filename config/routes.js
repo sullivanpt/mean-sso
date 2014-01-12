@@ -1,15 +1,30 @@
 'use strict';
 
 module.exports = function(app, passport, auth, oauth2) {
+    // Generic API authentication
+    // User must authenticate.
+    // Priority given to cookie based session authentication.
+    // Bearer token tried (without establishing a new cookie session) if cookie session does not exist.
+    // Otherwise 401 response sent.
+    var apiAuthenticate = function(req, res, next) {
+        if (!req.isAuthenticated()) {
+            passport.authenticate('bearer', {
+                session: false
+            })(req, res, next);
+        } else {
+            next();
+        }
+    };
+
     //User Routes
     var users = require('../app/controllers/users');
     app.get('/signin', users.signin);
     app.get('/signup', users.signup);
     app.get('/signout', users.signout);
-    app.get('/users/me', users.me);
+    // NOT USED: app.get('/users/me', users.me); // note returns null if user not authenticated
 
     //Setting up the users api
-    app.post('/users', users.create);
+    app.post('/users', users.create); // TODO: add captcha and/or email validation here
 
     //Setting the local strategy route
     app.post('/users/session', passport.authenticate('local', {
@@ -18,28 +33,8 @@ module.exports = function(app, passport, auth, oauth2) {
         failureFlash: true
     }), users.session);
 
-    // setting up the OAuth2orize routes
-    app.get('/oauth2/authorize', auth.ensureLoggedIn('/signin'), oauth2.authorization);
-    app.post('/oauth2/authorize/decision', auth.ensureLoggedIn('/signin'), oauth2.decision);
-    app.post('/oauth2/token', oauth2.token);
-
-    app.get('/oauth2/token', oauth2.token); //TODO: delete me
-
-    // Mimicking google's token info endpoint from
-    // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
-    var tokens = require('../app/controllers/tokens');
-    app.get('/oauth2/tokeninfo', tokens.info);
-
-    app.get('/api/users/me',passport.authenticate('bearer', {
-      session: false
-    }),users.me); //  TODO: delete me?
-
-    // CAS OAuth emulation points
-    app.get('/cas/oauth2.0/authorize', auth.ensureLoggedIn('/signin'), oauth2.authorization);
-    app.get('/cas/oauth2.0/accessToken', oauth2.formToken);
-    app.get('/cas/oauth2.0/profile',passport.authenticate('bearer', {
-        session: false
-    }),users.casProfile);
+    // Finish with setting up the userId param
+    // NOT USED: app.param('userId', users.user);
 
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -86,16 +81,30 @@ module.exports = function(app, passport, auth, oauth2) {
         failureRedirect: '/signin'
     }), users.authCallback);
 
-    //Finish with setting up the userId param
-    app.param('userId', users.user);
+    // setting up the OAuth2orize routes
+    app.get('/oauth2/authorize', auth.ensureLoggedIn, oauth2.authorization);
+    app.post('/oauth2/authorize/decision', auth.ensureLoggedIn, oauth2.decision);
+    app.post('/oauth2/token', oauth2.token);
+
+    app.get('/oauth2/token', oauth2.token); //TODO: delete me
+
+    // Mimicking google's token info endpoint from
+    // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
+    var tokens = require('../app/controllers/tokens');
+    app.get('/oauth2/tokeninfo', tokens.info);
+
+    // CAS OAuth emulation points
+    app.get('/cas/oauth2.0/authorize', auth.ensureLoggedIn, oauth2.authorization);
+    app.get('/cas/oauth2.0/accessToken', oauth2.formToken);
+    app.get('/cas/oauth2.0/profile', apiAuthenticate, users.casProfile);
 
     //Article Routes
     var articles = require('../app/controllers/articles');
     app.get('/articles', articles.all);
-    app.post('/articles', auth.requiresLogin, articles.create);
+    app.post('/articles', apiAuthenticate, articles.create);
     app.get('/articles/:articleId', articles.show);
-    app.put('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.update);
-    app.del('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.destroy);
+    app.put('/articles/:articleId', apiAuthenticate, auth.article.hasAuthorization, articles.update);
+    app.del('/articles/:articleId', apiAuthenticate, auth.article.hasAuthorization, articles.destroy);
 
     //Finish with setting up the articleId param
     app.param('articleId', articles.article);
