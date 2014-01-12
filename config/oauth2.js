@@ -346,6 +346,17 @@ module.exports = function (passport) {
         ] });
     };
 
+    //From time to time we need to clean up any expired tokens
+    //in the database
+    setInterval(function () {
+        accessTokens.removeExpired(function(err) {
+            if(err) {
+                console.error("Error removing expired tokens");
+            }
+        });
+    }, config.token.timeToCheckExpiredTokens * 1000);
+
+
 // Register serialialization and deserialization functions.
 //
 // When a client redirects a user to user authorization endpoint, an
