@@ -243,8 +243,10 @@ module.exports = function (passport) {
                 }
                 // WARNING: For security purposes, it is highly advisable to check that
                 //          redirectURI provided by the client matches one registered with
-                //          the server.  For simplicity, this example does not.  You have
-                //          been warned.
+                //          the server.
+                if (client.redirectUri && redirectURI.lastIndexOf(client.redirectUri, 0) !== 0) {
+                    return done(null, false, { message: 'Invalid redirectUri' });
+                }
                 return done(null, client, redirectURI);
             });
         }),

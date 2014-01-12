@@ -13,6 +13,8 @@
  *     trusted client and not a 3rd party application.  That means that the user will not be presented with
  *     a decision dialog with the trusted application and that the trusted application gets full scope access
  *     without the user having to make a decision to allow or disallow the scope access.
+ * redirectUri: (default if missing is accept any redirectURI). When set the OAuth client's redirectURI must
+ *     begin with the given string. WARNING: It is highly recommended this be non-NULL.
  */
 'use strict';
 
@@ -21,7 +23,8 @@ var clients = [
         id: '1',
         name: 'Samplr',
         clientId: 'abc123',
-        clientSecret: 'ssh-secret'
+        clientSecret: 'ssh-secret',
+        redirectUri: 'http://lvh.me:8080/logbackSsl'
     },
     {
         id: '2',
