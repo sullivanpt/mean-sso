@@ -4,6 +4,10 @@
 //(http://tools.ietf.org/html/rfc6750)
 'use strict';
 
+var simpleModel = require('../../helpers/simple-model');
+
+var AuthorizationCodeSchema = {};
+
 /**
  * Authorization codes in-memory data structure which stores all of the authorization codes
  */
@@ -16,7 +20,7 @@ var codes = {};
  * @param done The function to call next
  * @returns The authorization code if found, otherwise returns null
  */
-exports.find = function (key, done) {
+AuthorizationCodeSchema.find = function (key, done) {
     var code = codes[key];
     return done(null, code);
 };
@@ -31,7 +35,7 @@ exports.find = function (key, done) {
  * @param done Calls this with null always
  * @returns returns this with null
  */
-exports.save = function (code, clientID, redirectURI, userID, scope, done) {
+AuthorizationCodeSchema.save = function (code, clientID, redirectURI, userID, scope, done) {
     codes[code] = { clientID: clientID, redirectURI: redirectURI, userID: userID, scope: scope };
     return done(null);
 };
@@ -41,8 +45,9 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
  * @param key The authorization code to delete
  * @param done Calls this with null always
  */
-exports.delete = function (key, done) {
+AuthorizationCodeSchema.delete = function (key, done) {
     delete codes[key];
     return done(null);
 };
 
+simpleModel.model('AuthorizationCode', AuthorizationCodeSchema);

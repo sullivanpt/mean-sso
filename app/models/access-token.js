@@ -4,6 +4,10 @@
 //(http://tools.ietf.org/html/rfc6750)
 'use strict';
 
+var simpleModel = require('../../helpers/simple-model');
+
+var AccessTokenSchema = {};
+
 /**
  * Tokens in-memory data structure which stores all of the access tokens
  */
@@ -16,7 +20,7 @@ var tokens = {};
  * @param done The function to call next
  * @returns The access token if found, otherwise returns null
  */
-exports.find = function (key, done) {
+AccessTokenSchema.find = function (key, done) {
     var token = tokens[key];
     return done(null, token);
 };
@@ -31,7 +35,7 @@ exports.find = function (key, done) {
  * @param done Calls this with null always
  * @returns returns this with null
  */
-exports.save = function (token, expirationDate, userID, clientID, scope, done) {
+AccessTokenSchema.save = function (token, expirationDate, userID, clientID, scope, done) {
     tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
     return done(null);
 };
@@ -41,7 +45,7 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
  * @param key The access token to delete
  * @param done returns this when done
  */
-exports.delete = function (key, done) {
+AccessTokenSchema.delete = function (key, done) {
     delete tokens[key];
     return done(null);
 };
@@ -52,7 +56,7 @@ exports.delete = function (key, done) {
  * @param done returns this when done.
  * @returns done
  */
-exports.removeExpired = function (done) {
+AccessTokenSchema.removeExpired = function (done) {
     var tokensToDelete = [];
     for (var key in tokens) {
         if (tokens.hasOwnProperty(key)) {
@@ -73,7 +77,9 @@ exports.removeExpired = function (done) {
  * Removes all access tokens.
  * @param done returns this when done.
  */
-exports.removeAll = function (done) {
+AccessTokenSchema.removeAll = function (done) {
     tokens = {};
     return done(null);
 };
+
+simpleModel.model('AccessToken', AccessTokenSchema);

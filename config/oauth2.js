@@ -7,10 +7,11 @@ var mongoose = require('mongoose'),
     uid = require('../helpers/uid'),
     User = mongoose.model('User'),
 // TODO: convert the following models to Mongoose or REDIS
-    clients = require('../app/models/client'),
-    accessTokens = require('../app/models/access-token'),
-    refreshTokens = require('../app/models/refresh-token'),
-    authorizationCodes = require('../app/models/authorization-code'),
+    simpleModel = require('../helpers/simple-model'),
+    clients = simpleModel.model('Client'),
+    accessTokens = simpleModel.model('AccessToken'),
+    refreshTokens = simpleModel.model('RefreshToken'),
+    authorizationCodes = simpleModel.model('AuthorizationCode'),
     querystring = require('querystring');
 
 module.exports = function (passport) {

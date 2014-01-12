@@ -4,6 +4,10 @@
 //(http://tools.ietf.org/html/rfc6750)
 'use strict';
 
+var simpleModel = require('../../helpers/simple-model');
+
+var RefreshTokenSchema = {};
+
 /**
  * Tokens in-memory data structure which stores all of the refresh tokens
  */
@@ -16,7 +20,7 @@ var tokens = {};
  * @param done The function to call next
  * @returns The refresh token if found, otherwise returns null
  */
-exports.find = function (key, done) {
+RefreshTokenSchema.find = function (key, done) {
     var token = tokens[key];
     return done(null, token);
 };
@@ -30,7 +34,7 @@ exports.find = function (key, done) {
  * @param done Calls this with null always
  * @returns returns this with null
  */
-exports.save = function (token, userID, clientID, scope, done) {
+RefreshTokenSchema.save = function (token, userID, clientID, scope, done) {
     tokens[token] = { userID: userID, clientID: clientID, scope: scope};
     return done(null);
 };
@@ -40,7 +44,9 @@ exports.save = function (token, userID, clientID, scope, done) {
  * @param key The refresh token to delete
  * @param done returns this when done
  */
-exports.delete = function (key, done) {
+RefreshTokenSchema.delete = function (key, done) {
     delete tokens[key];
     return done(null);
 };
+
+simpleModel.model('RefreshToken', RefreshTokenSchema);

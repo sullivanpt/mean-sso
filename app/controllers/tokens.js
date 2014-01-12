@@ -1,7 +1,8 @@
 'use strict';
 
-var clients = require('../models/client'),
-    accessTokens = require('../models/access-token');
+var simpleModel = require('../../helpers/simple-model'),
+    clients = simpleModel.model('Client'),
+    accessTokens = simpleModel.model('AccessToken');
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to

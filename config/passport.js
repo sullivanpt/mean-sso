@@ -10,8 +10,9 @@ var mongoose = require('mongoose'),
     GitHubStrategy = require('passport-github').Strategy,
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     User = mongoose.model('User'),
-    clients = require('../app/models/client'),
-    accessTokens = require('../app/models/access-token'),
+    simpleModel = require('../helpers/simple-model'),
+    clients = simpleModel.model('Client'),
+    accessTokens = simpleModel.model('AccessToken'),
     config = require('./config');
 
 

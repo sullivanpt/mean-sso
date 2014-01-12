@@ -18,6 +18,10 @@
  */
 'use strict';
 
+var simpleModel = require('../../helpers/simple-model');
+
+var ClientSchema = {};
+
 var clients = [
     {
         id: '1',
@@ -48,7 +52,7 @@ var clients = [
  * @param done The function to call next
  * @returns The client if found, otherwise returns null
  */
-exports.find = function (id, done) {
+ClientSchema.find = function (id, done) {
     for (var i = 0, len = clients.length; i < len; i++) {
         var client = clients[i];
         if (client.id === id) {
@@ -65,7 +69,7 @@ exports.find = function (id, done) {
  * @param done The function to call next
  * @returns The client if found, otherwise returns null
  */
-exports.findByClientId = function (clientId, done) {
+ClientSchema.findByClientId = function (clientId, done) {
     for (var i = 0, len = clients.length; i < len; i++) {
         var client = clients[i];
         if (client.clientId === clientId) {
@@ -74,3 +78,5 @@ exports.findByClientId = function (clientId, done) {
     }
     return done(null, null);
 };
+
+simpleModel.model('Client', ClientSchema);
