@@ -19,11 +19,28 @@ exports.requiresLogin = function(req, res, next) {
 };
 
 /**
+ * user.hasRole as node handler.
+ * Example:
+ *   app.post('/articles',
+ *     apiAuthenticate,
+ *     auth.hasRole('Admin'),
+ *     articles.create);
+ */
+exports.hasRole = function (roles) {
+    return function(req, res, next) {
+        if(!req.user.hasRole(roles)) {
+            return res.send(401, 'User is not authorized');
+        }
+        next();
+    }
+};
+
+/**
  * User authorizations routing middleware
  */
 exports.user = {
     hasAuthorization: function(req, res, next) {
-        if (req.profile.id != req.user.id) {
+        if (req.profile.id != req.user.id && !req.user.hasRole('Admin')) {
             return res.send(401, 'User is not authorized');
         }
         next();
@@ -35,7 +52,7 @@ exports.user = {
  */
 exports.article = {
     hasAuthorization: function(req, res, next) {
-        if (req.article.user.id != req.user.id) {
+        if (req.article.user.id != req.user.id && !req.user.hasRole('Admin')) {
             return res.send(401, 'User is not authorized');
         }
         next();

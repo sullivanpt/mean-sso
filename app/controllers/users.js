@@ -55,6 +55,11 @@ exports.create = function(req, res, next) {
     var user = new User(req.body);
     var message = null;
 
+    // bootstrap the 'admin' user with the 'Admin' role
+    if (user.username === 'admin') {
+        user.roles.push('Admin');
+    }
+
     user.provider = 'local';
     user.save(function(err) {
         if (err) {

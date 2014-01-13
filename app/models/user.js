@@ -19,6 +19,7 @@ var UserSchema = new Schema({
         type: String,
         unique: true
     },
+    roles: [],
     hashed_password: String,
     provider: String,
     salt: String,
@@ -120,6 +121,25 @@ UserSchema.methods = {
         if (!password || !this.salt) return '';
         var salt = new Buffer(this.salt, 'base64');
         return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    },
+
+    /**
+     * Test user is in at least one of the specified roles
+     * Assumes roles argument is very short, as we're O(m*n).
+     */
+    hasRole: function (roles) {
+        if(Array.isArray(roles)) {
+            for (var i = roles.length; i--; ){
+                if((this.roles || []).indexOf(roles[i]) !== -1) {
+                    return true;
+                }
+            }
+        } else {
+            if((this.roles || []).indexOf(roles) !== -1) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 
