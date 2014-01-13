@@ -1,4 +1,5 @@
 # MEAN SSO
+[![Build Status](https://travis-ci.org/sullivanpt/mean-sso.png?branch=master)](https://travis-ci.org/sullivanpt/mean-sso)
 
 Primitive Node.js SSO based on the MEAN Stack and Oauth2orize middleware.
 
