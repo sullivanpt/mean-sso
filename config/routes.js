@@ -98,6 +98,12 @@ module.exports = function(app, passport, auth, oauth2) {
     app.get('/cas/oauth2.0/accessToken', oauth2.formToken);
     app.get('/cas/oauth2.0/profile', apiAuthenticate, oauth2.casProfile);
 
+    // CAS Protocol emulation points
+    app.get('/cas/login', auth.ensureLoggedIn, oauth2.casLogin);
+    app.get('/cas/validate', oauth2.casValidate);
+    app.get('/cas/serviceValidate', oauth2.casServiceValidate);
+    app.get('/cas/logout', users.signout); // no return url support
+
     //Article Routes
     var articles = require('../app/controllers/articles');
     app.get('/articles', articles.all);

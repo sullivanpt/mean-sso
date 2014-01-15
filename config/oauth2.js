@@ -27,6 +27,19 @@ module.exports = function (passport) {
 // the grant for an access token.
 
     /**
+     * generic authorization code grant
+     */
+    function _issueAuthorizationCode(client, redirectURI, user, ares, done) {
+        var code = uid.uid(config.token.authorizationCodeLength);
+        authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope, function (err) {
+            if (err) {
+                return done(err);
+            }
+            return done(null, code);
+        });
+    }
+
+    /**
      * Grant authorization codes
      *
      * The callback takes the `client` requesting authorization, the `redirectURI`
@@ -35,15 +48,7 @@ module.exports = function (passport) {
      * duration, etc. as parsed by the application.  The application issues a code,
      * which is bound to these values, and will be exchanged for an access token.
      */
-    server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
-        var code = uid.uid(config.token.authorizationCodeLength);
-        authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope, function (err) {
-            if (err) {
-                return done(err);
-            }
-            return done(null, code);
-        });
-    }));
+    server.grant(oauth2orize.grant.code(_issueAuthorizationCode));
 
     /**
      * Grant implicit authorization.
@@ -235,21 +240,33 @@ module.exports = function (passport) {
             next();
         },
         server.authorization(function (clientID, redirectURI, scope, done) {
-            clients.findByClientId(clientID, function (err, client) {
-                if (err) {
-                    return done(err);
-                }
-                if (client) {
-                    client.scope = scope;
-                }
-                // WARNING: For security purposes, it is highly advisable to check that
-                //          redirectURI provided by the client matches one registered with
-                //          the server.
-                if (client.redirectUri && redirectURI.lastIndexOf(client.redirectUri, 0) !== 0) {
-                    return done(null, false, { message: 'Invalid redirectUri' });
-                }
-                return done(null, client, redirectURI);
-            });
+            if (redirectURI && !clientID) {
+                clients.findByRedirectUri(redirectURI, function (err, client) {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (client) {
+                        client.scope = scope;
+                    }
+                    return done(null, client, redirectURI);
+                });
+            } else {
+                clients.findByClientId(clientID, function (err, client) {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (client) {
+                        client.scope = scope;
+                    }
+                    // WARNING: For security purposes, it is highly advisable to check that
+                    //          redirectURI provided by the client matches one registered with
+                    //          the server.
+                    if (client.redirectUri && redirectURI.lastIndexOf(client.redirectUri, 0) !== 0) {
+                        return done(null, false, { message: 'Invalid redirectUri' });
+                    }
+                    return done(null, client, redirectURI);
+                });
+            }
         }),
         function (req, res, next) {
             //Render the decision dialog if the client isn't a trusted client
@@ -305,6 +322,7 @@ module.exports = function (passport) {
     ];
 
     /**
+     * CAS OAuth2.0 Server Emulation.
      * Special version of token formats results as form url for CAS clients
      * @type {Array}
      * @private
@@ -339,6 +357,7 @@ module.exports = function (passport) {
     ];
 
     /**
+     * CAS OAuth2.0 Server Emulation.
      * Exports user profile as CAS clients expect it
      */
     var _casProfile = function (req, res) {
@@ -347,8 +366,111 @@ module.exports = function (passport) {
         ] });
     };
 
-    //From time to time we need to clean up any expired tokens
-    //in the database
+
+    //
+    // CAS 1.0 and 2.0 Protocol emulation.
+    // Emulates a subset of client authentication
+    // See http://www.jasig.org/cas/protocol
+    //
+
+    /**
+     * Load the CAS service ticket parser and alias it
+     */
+    var grantCas = require('../helpers/oauth2/grant/cas');
+    server.grant(grantCas(_issueAuthorizationCode));
+
+    var exchangeCasValidate = require('../helpers/oauth2/exchange/cas-validate');
+    server.exchange(exchangeCasValidate(function (client, code, redirectURI, done) {
+        authorizationCodes.find(code, function (err, authCode) {
+            if (err) {
+                return done(err);
+            }
+            if (!authCode) {
+                return done(null, false);
+            }
+            // implicit based on redirectURI: (client.id === authCode.clientID) {
+            if (redirectURI !== authCode.redirectURI) {
+                return done(null, false);
+            }
+            authorizationCodes.delete(code, function (err, result) {
+                if (err) {
+                    return done(err);
+                }
+                if (result != undefined && result === 0) {
+                    //This condition can result because of a "race condition" that can occur naturally when you're making
+                    //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
+                    // the result and if it's not undefined and the result is zero, then we have already deleted the
+                    // authorization code
+                    return done(null, false);
+                }
+                User.findOne({
+                    _id: authCode.userID
+                }, '-salt -hashed_password', function(err, user) {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (!user) {
+                        return done(null, false);
+                    }
+                    return done(null, user.username);
+                });
+            });
+        });
+    }));
+
+    var errorsCasError = require('../helpers/oauth2/errors/cas-error');
+
+    /**
+     * CAS 1.0 and 2.0 login ticket request
+     * grant 'ticket' (authorization-code) and return to 'service' url
+     * assume user already authenticated. no 'renew' or 'gateway' support.
+     */
+    var _casLogin = [
+        function (req, res, next) {
+            req.query['response_type'] = 'cas';
+            next();
+        },
+        _authorization
+    ];
+
+    /**
+     * CAS 1.0 ticket validation
+     *
+     * verify 'ticket' (bearer token) and return status to 'service' url
+     * do not support 'renew'
+     */
+    var _casValidate = [
+        function (req, res, next) {
+            // default used by CAS clients
+            req.body['grant_type'] = 'cas_validate';
+            req.body['cas_version'] = '1_0';
+            next();
+        },
+        server.token(),
+        errorsCasError.casValidateError
+    ];
+
+    /**
+     * CAS 2.0 ticket validation
+     *
+     * verify 'ticket' (bearer token) and return status to 'service' url
+     * do not support 'renew' or 'pgtUrl'
+     */
+    var _casServiceValidate = [
+        function (req, res, next) {
+            // default used by CAS clients
+            req.body['grant_type'] = 'cas_validate';
+            req.body['cas_version'] = '2_0';
+            next();
+        },
+        server.token(),
+        errorsCasError.casValidateError
+    ];
+
+
+    /**
+     * From time to time we need to clean up any expired tokens in the database
+     */
     setInterval(function () {
         accessTokens.removeExpired(function(err) {
             if(err) {
@@ -389,6 +511,9 @@ module.exports = function (passport) {
         decision: _decision,
         token: _token,
         formToken: _formToken,
-        casProfile: _casProfile
+        casProfile: _casProfile,
+        casLogin: _casLogin,
+        casValidate: _casValidate,
+        casServiceValidate: _casServiceValidate
     };
 }

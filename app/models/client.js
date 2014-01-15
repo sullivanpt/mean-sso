@@ -79,4 +79,21 @@ ClientSchema.findByClientId = function (clientId, done) {
     return done(null, null);
 };
 
+/**
+ * Returns a client if it finds one, otherwise returns
+ * null if a client is not found.
+ * @param redirectURI The unique redirectURI/serviceID id of the client to find
+ * @param done The function to call next
+ * @returns The client if found, otherwise returns null
+ */
+ClientSchema.findByRedirectUri = function (redirectURI, done) {
+    for (var i = 0, len = clients.length; i < len; i++) {
+        var client = clients[i];
+        if (redirectURI.lastIndexOf(client.redirectUri, 0) === 0) { // "starts with"
+            return done(null, client);
+        }
+    }
+    return done(null, null);
+};
+
 simpleModel.model('Client', ClientSchema);
