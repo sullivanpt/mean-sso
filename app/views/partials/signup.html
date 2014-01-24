@@ -4,7 +4,10 @@
   <div class="col-sm-12">
     <h1>Sign up</h1>
   </div>
-  <div class="col-sm-12">
+  <div class="col-sm-6">
+    <div ng-include="'partials/providers.html'"></div>
+  </div>
+  <div class="col-sm-6">
     <form class="form" name="form" ng-submit="register(form)" novalidate>
 
       <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,

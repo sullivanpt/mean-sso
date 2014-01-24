@@ -10,8 +10,17 @@
     "mongoose": "~3.5.5",
     "mongoose-unique-validator": "~0.3.0",
     "connect-mongo": "~0.4.0",
+    "oauth2orize": "latest",
     "passport": "latest",
     "passport-local": "latest",
+    "passport-facebook": "latest",
+    "passport-twitter": "latest",
+    "passport-github": "latest",
+    "passport-google-oauth": "latest",
+    "passport-http": "0.2.x",
+    "passport-http-bearer": "0.2.x",
+    "passport-oauth2-client-password": "0.1.x",
+    "connect-ensure-login": "0.1.x",
     "ejs": "~0.8.4"
   },
   "devDependencies": {
