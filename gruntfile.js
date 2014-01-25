@@ -120,6 +120,9 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
+            '<%= yeoman.dist %>/package.json',
+            '<%= yeoman.dist %>/server.js',
+            '<%= yeoman.dist %>/lib/*',
             '<%= yeoman.dist %>/views/*',
             '<%= yeoman.dist %>/public/*',
             '!<%= yeoman.dist %>/public/.git*',
