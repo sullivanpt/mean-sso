@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .factory('Auth', function Auth($location, $rootScope, Session, User, $cookieStore) {
+  .factory('Auth', function Auth($location, $rootScope, Session, User, $cookieStore, $window) {
     
     // Get currentUser from cookie
     $rootScope.currentUser = $cookieStore.get('user') || null;
@@ -23,7 +23,12 @@ angular.module('meanSsoApp')
           email: user.email,
           password: user.password
         }, function(user) {
-          $rootScope.currentUser = user;
+          if (user.redirectTo) {
+            // inline signal to the client that a redirect is required
+            $window.location = user.redirectTo;
+          } else {
+            $rootScope.currentUser = user;
+          }
           return cb();
         }, function(err) {
           return cb(err);
