@@ -1,5 +1,5 @@
 {
-  "name": "meansso",
+  "name": "meanSso",
   "description": "MEAN SSO - A simple SSO and CMS based on MEAN and Oauth2orize.",
   "version": "0.2.0",
   "private": false,
