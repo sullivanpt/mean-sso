@@ -27,6 +27,17 @@ and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
 The first user to register with username 'admin' is assigned the 'Admin' role.
 
+## Scenarios currently implemented and verified
+
+** Auth2 Server (see ./lib/routes.js for API endpoints): **
+* https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Resource-Owner-Password-Credentials
+* https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Authorization-code
+* https://wiki.jasig.org/display/CASUM/Configuration+for+the+OAuth+server+support#ConfigurationfortheOAuthserversupport-I.HowtouseOAuthserversupportconfiguredforCASserver?
+* http://www.jasig.org/cas/protocol (no support for advanced features).
+
+** Auth2 Client (see ./app/views/partials/providers.html for end user URLs): **
+* Facebook http://passportjs.org/guide/facebook/
+
 ## TODO: Finishe the README. Right now the remainder of this file is the mean-seed readme unedited
 
 ## Prerequisites
