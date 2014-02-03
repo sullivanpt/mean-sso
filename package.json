@@ -21,7 +21,8 @@
     "passport-http-bearer": "0.2.x",
     "passport-oauth2-client-password": "0.1.x",
     "connect-ensure-login": "0.1.x",
-    "ejs": "~0.8.4"
+    "ejs": "~0.8.4",
+    "cors": "~2.1.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
