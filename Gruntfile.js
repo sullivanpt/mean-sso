@@ -109,7 +109,7 @@ module.exports = function (grunt) {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: ['test/spec/{,*/}*.js']
+        src: ['test/**/*.js']
       }
     },
 
@@ -356,6 +356,14 @@ module.exports = function (grunt) {
       travis: {
         browsers: ['PhantomJS']
       }
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/server/spec/**/*.js']
+      }
     }
   });
 
@@ -383,6 +391,11 @@ module.exports = function (grunt) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });
+
+  grunt.registerTask('testServer', [
+    'clean:server',
+    'mochaTest'
+  ]);
 
   grunt.registerTask('test', function (target) {
     target = target || 'unit';
@@ -417,6 +430,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'newer:jshint',
+    'testServer',
     'test',
     'build'
   ]);
