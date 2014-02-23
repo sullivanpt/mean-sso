@@ -142,5 +142,18 @@ exports.request = {
         Authorization: 'Bearer ' + accessToken
       }
     }, next);
+  },
+  /**
+   * Wait for server to run, then call done.
+   * TODO: fix me. currently this is just a delay, it needs a loop.
+   */
+  waitForServerReady: function (done) {
+    requestLib.get({
+        url: properties.hostname
+      }, function (error, response /*, body */) {
+        console.log('SERVER STATUS ' + response.statusCode);
+        done();
+      }
+    );
   }
 };

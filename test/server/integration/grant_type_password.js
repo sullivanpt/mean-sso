@@ -13,6 +13,10 @@ var simpleModel = require('../../../lib/helpers/simple-model'),
 //and turn off the strict SSL requirement
 var request = request.defaults({jar: true, strictSSL: false});
 
+before(function (done) {
+  helper.waitForServerReady(done); // ensure server is up
+});
+
 /**
  * Tests for the Grant Type of Password.
  * This follows the testing guide roughly from
@@ -26,7 +30,7 @@ describe('Grant Type Password', function () {
       done();
     });
   });
-  it('should work with asking for an access token and refrsh token', function (done) {
+  it('should work with asking for an access token and refresh token', function (done) {
     helper.postOAuthPassword('offline_access',
       function (error, response, body) {
         validate.validateAccessRefreshToken(response, body);

@@ -358,11 +358,24 @@ module.exports = function (grunt) {
       }
     },
     mochaTest: {
-      test: {
+      unit: {
         options: {
           reporter: 'spec'
         },
-        src: ['test/server/spec/**/*.js']
+        src: [ 'test/server/spec/**/*.js' ]
+      },
+      integration: {
+        options: {
+          reporter: 'spec',
+          require: './server'
+        },
+        src: [ 'test/server/integration/grant_type_password.js' ]
+      }
+
+    },
+    env: {
+      test: {
+        NODE_ENV: 'test'
       }
     }
   });
@@ -392,12 +405,17 @@ module.exports = function (grunt) {
     grunt.task.run(['serve']);
   });
 
-  grunt.registerTask('testServer', [
-    'clean:server',
-    'mochaTest'
-  ]);
+  grunt.registerTask('testServer', function (target) {
+    target = target || 'unit';
+    grunt.task.run([
+      'clean:server',
+      'env:test',
+      'mochaTest:' + target
+    ]);
 
-  grunt.registerTask('test', function (target) {
+  });
+
+  grunt.registerTask('testClient', function (target) {
     target = target || 'unit';
     grunt.task.run([
       'clean:server',
@@ -405,6 +423,23 @@ module.exports = function (grunt) {
       'autoprefixer',
       'karma:' + target
     ]);
+  });
+
+  grunt.registerTask('test',  function (target) {
+    if (target === 'travis') {
+      grunt.task.run([
+        'newer:jshint',
+        'testServer:unit',
+        'testServer:integration',
+        'testClient:travis'
+      ]);
+    } else {
+      grunt.task.run([
+        'testServer:unit',
+        'testServer:integration',
+        'testClient'
+      ]);
+    }
   });
 
   grunt.registerTask('build', [
@@ -430,7 +465,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'newer:jshint',
-    'testServer',
     'test',
     'build'
   ]);
