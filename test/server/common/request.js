@@ -19,8 +19,8 @@ exports.request = {
   login: function (next) {
     requestLib.post(
       properties.login, {
-        form: {
-          username: properties.username,
+        json: {
+          email: properties.email,
           password: properties.password
         }
       }, next);
@@ -150,8 +150,7 @@ exports.request = {
   waitForServerReady: function (done) {
     requestLib.get({
         url: properties.hostname
-      }, function (error, response /*, body */) {
-        console.log('SERVER STATUS ' + response.statusCode);
+      }, function (/* error, response, body */) {
         done();
       }
     );

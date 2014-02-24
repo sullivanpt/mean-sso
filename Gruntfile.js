@@ -369,7 +369,7 @@ module.exports = function (grunt) {
           reporter: 'spec',
           require: './server'
         },
-        src: [ 'test/server/integration/grant_type_password.js' ]
+        src: [ 'test/server/integration/*.js' ]
       }
 
     },

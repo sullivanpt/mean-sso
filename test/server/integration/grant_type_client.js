@@ -2,8 +2,8 @@
 /*jshint camelcase: false */
 
 var request = require('request'),
-  helper = require('./common').request,
-  validate = require('./common').validate;
+  helper = require('../common').request,
+  validate = require('../common').validate;
 
 require('../../../lib/models/access-token');
 var simpleModel = require('../../../lib/helpers/simple-model'),
@@ -12,6 +12,10 @@ var simpleModel = require('../../../lib/helpers/simple-model'),
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
 var request = request.defaults({jar: true, strictSSL: false});
+
+before(function (done) {
+  helper.waitForServerReady(done); // ensure server is up
+});
 
 /**
  * Tests for the Grant Type of Client.

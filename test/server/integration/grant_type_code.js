@@ -3,9 +3,9 @@
 
 var assert = require('assert'),
   request = require('request'),
-  helper = require('./common').request,
-  validate = require('./common').validate,
-  properties = require('./common').properties;
+  helper = require('../common').request,
+  validate = require('../common').validate,
+  properties = require('../common').properties;
 
 require('../../../lib/models/access-token');
 var simpleModel = require('../../../lib/helpers/simple-model'),
@@ -14,6 +14,10 @@ var simpleModel = require('../../../lib/helpers/simple-model'),
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
 var request = request.defaults({jar: true, strictSSL: false});
+
+before(function (done) {
+  helper.waitForServerReady(done); // ensure server is up
+});
 
 /**
  * Tests for the Grant Type of Authorization Code.
@@ -116,8 +120,8 @@ describe('Grant Type Authorization Code', function () {
         //Get the OAuth2 authorization code
         helper.getAuthorization({clientId: 'someinvalidclientid'},
           function (error, response /*, body */) {
-            //assert that we are getting an error code of 400
-            assert.equal(response.statusCode, 400);
+            //assert that we are getting an error code of 403
+            assert.equal(response.statusCode, 403);
             done();
           }
         );
@@ -145,8 +149,8 @@ describe('Grant Type Authorization Code', function () {
         //Get the OAuth2 authorization code
         helper.getAuthorization({responseType: 'invalid'},
           function (error, response /* , body */) {
-            //assert that we are getting an error code of 400
-            assert.equal(response.statusCode, 400);
+            //assert that we are getting an error code of 501
+            assert.equal(response.statusCode, 501);
             done();
           }
         );

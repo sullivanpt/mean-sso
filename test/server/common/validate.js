@@ -102,12 +102,12 @@ validate.validateClientJson = function (response, body) {
  * @param body The body of the message which contains the error message
  */
 validate.validateInvalidCodeError = function (response, body) {
-  assert.equal(response.statusCode, 400);
+  assert.equal(response.statusCode, 403);
   var jsonResponse = JSON.parse(body);
   assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 2);
   assert.equal(jsonResponse.error, 'invalid_grant');
-  assert.equal(jsonResponse.error_description, 'invalid code');
+  assert.equal(jsonResponse.error_description, 'Invalid authorization code');
 };
 
 /**
