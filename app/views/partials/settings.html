@@ -2,6 +2,18 @@
 
 <div class="row">
   <div class="col-sm-12">
+    <h1>Profile</h1>
+  </div>
+  <div class="col-sm-12">
+    <p><strong>Name</strong> {{currentUser.name}}</p>
+    <p><strong>Username</strong> {{currentUser.username}}</p>
+    <p><strong>Role</strong> {{currentUser.role}}</p>
+    <p><strong>Groups</strong><span ng-repeat="group in currentUser.groups"> {{group}}</span></p>
+    <p><strong>Authentication</strong> {{currentUser.provider}}</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
     <h1>Change Password</h1>
   </div>
   <div class="col-sm-12">
