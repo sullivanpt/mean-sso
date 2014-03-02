@@ -162,6 +162,11 @@ module.exports = function (grunt) {
       }
     },
 
+    // Capture the git commit for reporting
+    'git-describe': {
+      me: {}
+    },
+
     // Renames files for browser caching purposes
     rev: {
       dist: {
@@ -267,6 +272,7 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>/public',
           src: [
+            'version.json',
             '*.{ico,png,txt}',
             '.htaccess',
             'bower_components/**/*',
@@ -380,6 +386,16 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('version', 'Tag the current build revision', function () {
+    grunt.event.once('git-describe', function (rev) {
+      grunt.file.write(grunt.config('yeoman.app') + '/version.json', JSON.stringify({
+        revision: rev[0],
+        date: grunt.template.today('isoDateTime')
+      }));
+    });
+    grunt.task.run('git-describe');
+  });
+
   grunt.registerTask('express-keepalive', 'Keep grunt running', function() {
     this.async();
   });
@@ -391,6 +407,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'version',
       'bower-install',
       'concurrent:server',
       'autoprefixer',
@@ -409,6 +426,7 @@ module.exports = function (grunt) {
     target = target || 'unit';
     grunt.task.run([
       'clean:server',
+      'version',
       'env:test',
       'mochaTest:' + target
     ]);
@@ -419,6 +437,7 @@ module.exports = function (grunt) {
     target = target || 'unit';
     grunt.task.run([
       'clean:server',
+      'version',
       'concurrent:test',
       'autoprefixer',
       'karma:' + target
@@ -444,6 +463,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'version',
     'bower-install',
     'useminPrepare',
     'concurrent:dist',

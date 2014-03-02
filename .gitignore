@@ -4,6 +4,7 @@ public
 .tmp
 .sass-cache
 app/bower_components
+app/version.json
 heroku
 /views
 dist
