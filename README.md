@@ -25,7 +25,7 @@ and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
 ## Getting Started
 
-The first user to register with username 'admin' is assigned the 'Admin' role.
+The dummydata.js will create an 'admin' user assigned the 'Admin' role.
 
 ** Requirements (as tested on Win 7/8.1 x64) **
 * (optional) Chrome v32.0.1700.102 for karma unit testing
