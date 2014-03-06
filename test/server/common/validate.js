@@ -82,14 +82,14 @@ validate.validateUserJson = function (response, body) {
  * @param response The http response
  * @param body The body of the message which contains the client json message
  */
-validate.validateClientJson = function (response, body) {
+validate.validateClientJson = function (response, body, scope) {
   assert.equal(response.statusCode, 200);
   var jsonResponse = JSON.parse(body);
   assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
   assert.equal(Object.keys(jsonResponse).length, 3);
   assert.equal(jsonResponse.client_id, '3');
   assert.equal(jsonResponse.name, 'Samplr3');
-  assert.equal(jsonResponse.scope, '*');
+  assert.deepEqual(jsonResponse.scope, scope);
 };
 
 /**

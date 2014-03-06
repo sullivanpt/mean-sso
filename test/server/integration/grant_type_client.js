@@ -31,14 +31,14 @@ describe('Grant Type Client', function () {
     });
   });
   it('should work with asking for an access token', function (done) {
-    helper.postOAuthClient('*',
+    helper.postOAuthClient('profile account',
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
         //Get the user info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body);
+            validate.validateClientJson(response, body, ['profile','account']);
             done();
           }
         );
@@ -54,7 +54,7 @@ describe('Grant Type Client', function () {
         //Get the user info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body);
+            validate.validateClientJson(response, body, ['*']);
             done();
           }
         );
