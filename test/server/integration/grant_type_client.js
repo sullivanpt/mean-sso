@@ -31,7 +31,7 @@ describe('Grant Type Client', function () {
     });
   });
   it('should work with asking for an access token', function (done) {
-    helper.postOAuthClient({},
+    helper.postOAuthClient('*',
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
