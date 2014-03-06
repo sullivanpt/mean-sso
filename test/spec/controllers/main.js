@@ -22,7 +22,7 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
+  it('should attach a list of awesomeThings and the version to the scope', function () {
     expect(scope.awesomeThings).toBeUndefined();
     $httpBackend.flush();
     expect(scope.awesomeThings.length).toBe(4);
