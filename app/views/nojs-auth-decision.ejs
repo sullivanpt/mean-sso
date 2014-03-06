@@ -42,7 +42,14 @@
         <div class="upper-box">
           <div>
             <p><%= user.name %>,</p>
-            The application <b><%= client.name %></b> is requesting access to your account.
+            <p>The application <b><%= client.name %></b> is requesting access to your account.</p>
+            <p>The application wants the permissions:
+            <ul>
+            <% for(var i=0; i<scope.length; i++) {%>
+               <li><code><%= scope[i] %></code></li>
+            <% } %>
+            </ul>
+            </p>
             <p>Do you approve?</p>
           </div>
         </div>
