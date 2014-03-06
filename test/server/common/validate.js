@@ -45,6 +45,7 @@ validate.validateAccessRefreshToken = function (response, body) {
   assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 4);
   assert.equal(jsonResponse.access_token.length, 256);
+  assert.equal(jsonResponse.refresh_token.length, 256);
   assert.equal(jsonResponse.expires_in, 3600);
   assert.equal(jsonResponse.token_type, 'Bearer');
 };

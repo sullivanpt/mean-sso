@@ -33,7 +33,7 @@ describe('Grant Type Authorization Code', function () {
     });
   });
   it('should redirect when trying to get authorization without logging in', function (done) {
-    request.get(properties.logout);
+    helper.logout();
     helper.getAuthorization({},
       function (error, response /*, body */) {
         assert.equal(response.req.path.indexOf('/?code='), -1);
@@ -46,7 +46,7 @@ describe('Grant Type Authorization Code', function () {
     helper.login(
       function (/*error, response, body*/) {
         //Get the OAuth2 authorization code
-        helper.getAuthorization({scope: 'offline_access'},
+        helper.getAuthorization({scope: 'offline_access profile'},
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
             assert.equal(response.req.path.indexOf('/?code='), 0);
@@ -57,27 +57,35 @@ describe('Grant Type Authorization Code', function () {
               function (error, response, body) {
                 validate.validateAccessRefreshToken(response, body);
                 var tokens = JSON.parse(body);
-                //Get the user info
-                helper.getUserInfo(tokens.access_token,
-                  function (error, response, body) {
-                    validate.validateUserJson(response, body);
-                  }
-                );
-                //Get another valid access token from the refresh token
-                helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
-                  validate.validateAccessToken(response, body);
+                helper.logout(function () {
+                  //Get the client info
+                  helper.getClientInfo(tokens.access_token,
+                    function (error, response, body) {
+                      validate.validateClientJson(response, body, ['offline_access','profile']);
+                      //Get the user info
+                      helper.getUserInfo(tokens.access_token,
+                        function (error, response, body) {
+                          validate.validateUserJson(response, body);
+                          //Get another valid access token from the refresh token
+                          helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
+                            validate.validateAccessToken(response, body);
+                            //Get another valid access token from the refresh token
+                            helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
+                              validate.validateAccessToken(response, body);
+                              //Try to get the token again but we shouldn't be able to reuse the same code
+                              helper.postOAuthCode(code,
+                                function (error, response, body) {
+                                  validate.validateInvalidCodeError(response, body);
+                                  done();
+                                }
+                              );
+                            });
+                          });
+                        }
+                      );
+                    }
+                  );
                 });
-                //Get another valid access token from the refresh token
-                helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
-                  validate.validateAccessToken(response, body);
-                });
-              }
-            );
-            //Try to get the token again but we shouldn't be able to reuse the same code
-            helper.postOAuthCode(code,
-              function (error, response, body) {
-                validate.validateInvalidCodeError(response, body);
-                done();
               }
             );
           }
@@ -100,13 +108,22 @@ describe('Grant Type Authorization Code', function () {
             helper.postOAuthCode(code,
               function (error, response, body) {
                 validate.validateAccessToken(response, body);
-                //Get the user info
-                helper.getUserInfo(JSON.parse(body).access_token,
-                  function (error, response, body) {
-                    validate.validateUserJson(response, body);
-                  }
-                );
-                done();
+                var tokens = JSON.parse(body);
+                helper.logout(function () {
+                  //Get the user info
+                  helper.getUserInfo(tokens.access_token,
+                    function (error, response, body) {
+                      validate.validateUserJson(response, body);
+                      //Get the client info
+                      helper.getClientInfo(tokens.access_token,
+                        function (error, response, body) {
+                          validate.validateClientJson(response, body, ['*']);
+                          done();
+                        }
+                      );
+                    }
+                  );
+                });
               }
             );
           }

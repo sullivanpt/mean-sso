@@ -26,6 +26,14 @@ exports.request = {
       }, next);
   },
   /**
+   * Logout as the user would to ensure session cookies are cleared
+   * @param next Standard forward to the next function call
+   * @param next
+   */
+  logout: function (next) {
+    requestLib.get(properties.logout, next || function () {});
+  },
+  /**
    * Posts to the OAuth2 Authorization server the code to get the access token
    * @param code The Authorization code
    * @param next Standard forward to the next function call

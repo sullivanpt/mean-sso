@@ -35,7 +35,7 @@ describe('Grant Type Client', function () {
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
-        //Get the user info
+        //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
             validate.validateClientJson(response, body, ['profile','account']);
@@ -51,7 +51,7 @@ describe('Grant Type Client', function () {
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
-        //Get the user info
+        //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
             validate.validateClientJson(response, body, ['*']);

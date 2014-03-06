@@ -32,7 +32,7 @@ describe('Grant Type Implicit', function () {
     });
   });
   it('should redirect when trying to get authorization without logging in', function (done) {
-    request.get(properties.logout, function () {
+    helper.logout(function () {
       helper.getAuthorization({responseType: 'token'},
         function (error, response /*, body */) {
           assert.equal(-1, response.request.href.indexOf('/#access_token='));
@@ -46,7 +46,7 @@ describe('Grant Type Implicit', function () {
     helper.login(
       function (/* error, response, body */) {
         //Get the OAuth2 authorization code
-        helper.getAuthorization({responseType: 'token'},
+        helper.getAuthorization({responseType: 'token', scope: 'profile account'},
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
             assert.equal(properties.hostname.length, response.request.href.indexOf('/#access_token='));
@@ -57,13 +57,21 @@ describe('Grant Type Implicit', function () {
             assert.equal(expiresIn, 3600);
             var tokenType = params[2].split('=',2)[1];
             assert.equal(tokenType, 'Bearer');
-            //Get the user info
-            helper.getUserInfo(accessToken,
-              function (error, response, body) {
-                validate.validateUserJson(response, body);
-                done();
-              }
-            );
+            helper.logout(function () {
+              //Get the client info
+              helper.getClientInfo(accessToken,
+                function (error, response, body) {
+                  validate.validateClientJson(response, body, ['profile', 'account']);
+                  //Get the user info
+                  helper.getUserInfo(accessToken,
+                    function (error, response, body) {
+                      validate.validateUserJson(response, body);
+                      done();
+                    }
+                  );
+                }
+              );
+            });
           }
         );
       }
