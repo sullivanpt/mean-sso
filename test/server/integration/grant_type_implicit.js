@@ -46,7 +46,7 @@ describe('Grant Type Implicit', function () {
     helper.login(
       function (/* error, response, body */) {
         //Get the OAuth2 authorization code
-        helper.getAuthorization({responseType: 'token', scope: 'profile account'},
+        helper.getAuthorization({responseType: 'token', scope: 'profile account', state: 'rAnDom' },
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
             assert.equal(properties.hostname.length, response.request.href.indexOf('/#access_token='));
@@ -57,6 +57,8 @@ describe('Grant Type Implicit', function () {
             assert.equal(expiresIn, 3600);
             var tokenType = params[2].split('=',2)[1];
             assert.equal(tokenType, 'Bearer');
+            var state = params[3].split('=',2)[1];
+            assert.equal(state, 'rAnDom'); // verify state is available for CSRF mitigation
             helper.logout(function () {
               //Get the client info
               helper.getClientInfo(accessToken,

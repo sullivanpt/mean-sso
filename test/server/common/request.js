@@ -123,7 +123,8 @@ exports.request = {
     var response_type = (options && options.responseType) || 'code';
     var client_id = (options && options.clientId) || properties.clientId;
     var scope = (options && options.scope) || '';
-    requestLib.get(authorization + '?redirect_uri=' + redirect_uri + '&response_type=' + response_type + '&client_id=' + client_id + '&scope=' + scope, next);
+    var state = (options && options.state) || '';
+    requestLib.get(authorization + '?redirect_uri=' + redirect_uri + '&response_type=' + response_type + '&client_id=' + client_id + '&scope=' + scope + '&state=' + state, next);
   },
   /**
    * Gets the user info from the OAuth2 authorization server
