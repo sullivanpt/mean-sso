@@ -1,10 +1,10 @@
 # MEAN SSO
 [![Build Status](https://travis-ci.org/sullivanpt/mean-sso.png?branch=master)](https://travis-ci.org/sullivanpt/mean-sso)
 
-Primitive Node.js SSO based on the generator-angular-fullstack version of the MEAN Stack and Oauth2orize middleware.
+Primitive Node.js SSO based on the generator-angular-fullstack version of the MEAN Stack and OAuth2orize middleware.
 
 Project Goals:
-* Create a stand-alone SSO supporting OAuth2.0 clients, simple JASIG CAS clients, including JASIG CAS Auth2 server.
+* Create a stand-alone SSO supporting OAuth2.0 clients, simple JASIG CAS clients, including JASIG CAS OAuth2 server.
 * Option to delegate primary user login to multiple third party providers, especially Facebook.
 * Authenticate and Authorize API using cookies or bearer tokens and role based security.
 * Web based configuration with role based authorization.
@@ -26,12 +26,13 @@ and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 ## Getting Started
 
 The dummydata.js will create an 'admin' user assigned the 'Admin' role.
+Like other generator-angular applications, the DEV and TEST environment's server default to port 9000.
 
 ** Requirements (as tested on Win 7/8.1 x64) **
 * (optional) Chrome v32.0.1700.102 for karma unit testing
 * (optional) msysgit v1.8.5.2 for bash shell (and version control)
 * (optional) Heroku toolbelt v3.2.0 (tools only) for deployment
-* MongoDB v2.4.9
+* MongoDB v2.4.9 (localhost with open credentials)
 * Node.js v0.10.25
 * npm install -g yo generator-angular-fullstack
 
@@ -43,17 +44,22 @@ The dummydata.js will create an 'admin' user assigned the 'Admin' role.
 * grunt
 
 ** Development scenarios **
-* Use any of the generator-angular-fullstack commands
+Use any of the generator-angular-fullstack commands, especially:
+* 'grunt serve' to iteratively develop.
+* 'grunt' to build and run the entire test suite.
+* 'yo angular-fullstack:route <controller name>' to generate boiler plate for a new route.
 
 ## Scenarios currently implemented and verified
 
-** Auth2 Server (see ./lib/routes.js for API endpoints): **
+** OAuth2 Server (see ./lib/routes.js for API endpoints): **
 * https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Resource-Owner-Password-Credentials
 * https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Authorization-code
+* https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Implicit
+* https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Client-Credentials
 * https://wiki.jasig.org/display/CASUM/Configuration+for+the+OAuth+server+support#ConfigurationfortheOAuthserversupport-I.HowtouseOAuthserversupportconfiguredforCASserver?
 * http://www.jasig.org/cas/protocol (no support for advanced features).
 
-** Auth2 Client (see ./app/views/partials/providers.html for end user URLs): **
+** OAuth2 Client (see ./app/views/partials/providers.html for end user URLs): **
 * Facebook http://passportjs.org/guide/facebook/
 
 ## License
