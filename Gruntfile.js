@@ -448,6 +448,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'version',
+      'concurrent:test',
       'env:test',
       'mochaTest:' + target
     ]);
