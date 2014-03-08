@@ -49,11 +49,11 @@ describe('Grant Type Authorization Code', function () {
         helper.getAuthorization({scope: 'offline_access profile'},
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
-            assert.equal(response.req.path.indexOf('/?code='), 0);
-            var code = response.req.path.slice(7, response.req.path.length);
+            assert.equal(response.req.path.indexOf('/?code='), 9);
+            var code = response.req.path.slice(9+7, response.req.path.length);
             validate.validateAuthorizationCode(code);
             //Get the token
-            helper.postOAuthCode(code,
+            helper.postOAuthCode({}, code,
               function (error, response, body) {
                 validate.validateAccessRefreshToken(response, body);
                 var tokens = JSON.parse(body);
@@ -61,7 +61,7 @@ describe('Grant Type Authorization Code', function () {
                   //Get the client info
                   helper.getClientInfo(tokens.access_token,
                     function (error, response, body) {
-                      validate.validateClientJson(response, body, ['offline_access','profile']);
+                      validate.validateClientJson(response, body, {scope: ['offline_access','profile']});
                       //Get the user info
                       helper.getUserInfo(tokens.access_token,
                         function (error, response, body) {
@@ -73,7 +73,7 @@ describe('Grant Type Authorization Code', function () {
                             helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
                               validate.validateAccessToken(response, body);
                               //Try to get the token again but we shouldn't be able to reuse the same code
-                              helper.postOAuthCode(code,
+                              helper.postOAuthCode({}, code,
                                 function (error, response, body) {
                                   validate.validateInvalidCodeError(response, body);
                                   done();
@@ -101,11 +101,11 @@ describe('Grant Type Authorization Code', function () {
         helper.getAuthorization({},
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
-            assert.equal(response.req.path.indexOf('/?code='), 0);
-            var code = response.req.path.slice(7, response.req.path.length);
+            assert.equal(response.req.path.indexOf('/?code='), 9);
+            var code = response.req.path.slice(9+7, response.req.path.length);
             validate.validateAuthorizationCode(code);
             //Get the token
-            helper.postOAuthCode(code,
+            helper.postOAuthCode({}, code,
               function (error, response, body) {
                 validate.validateAccessToken(response, body);
                 var tokens = JSON.parse(body);
@@ -117,7 +117,7 @@ describe('Grant Type Authorization Code', function () {
                       //Get the client info
                       helper.getClientInfo(tokens.access_token,
                         function (error, response, body) {
-                          validate.validateClientJson(response, body, ['*']);
+                          validate.validateClientJson(response, body, {});
                           done();
                         }
                       );
@@ -126,6 +126,51 @@ describe('Grant Type Authorization Code', function () {
                 });
               }
             );
+          }
+        );
+      }
+    );
+  });
+  it('should work with for a client with a registered redirectUri', function (done) {
+    //Log into the OAuth2 server as bob
+    helper.login(
+      function (/* error, response, body */) {
+        //Get the OAuth2 authorization code
+        helper.getAuthorization({
+            clientId: properties.casClientId,
+            scope: 'login'
+          }, function (error, response /*, body */) {
+            //Assert that we have the ?code in our URL
+            assert.equal(response.req.path.indexOf('/?code='), 9);
+            var code = response.req.path.slice(9+7, response.req.path.length);
+            validate.validateAuthorizationCode(code);
+            //Get the token
+            helper.postOAuthCode({
+                clientId: properties.casClientId,
+                clientSecret: properties.casClientSecret
+              }, code,
+              function (error, response, body) {
+                validate.validateAccessToken(response, body);
+                done(); // don't need to test token access again
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+  it('should give an error with an unregistered redirectUri', function (done) {
+    helper.login(
+      function (/* error, response, body */) {
+        //Get the OAuth2 authorization code
+        helper.getAuthorization({
+            clientId: properties.casClientId,
+            scope: 'login',
+            redirect: 'http://untrusted/callback/'
+          }, function (error, response /* , body */) {
+            //assert that we are getting an error code of 501
+            assert.equal(response.statusCode, 403);
+            done();
           }
         );
       }

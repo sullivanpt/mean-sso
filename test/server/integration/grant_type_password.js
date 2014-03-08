@@ -38,7 +38,7 @@ describe('Grant Type Password', function () {
         //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body, ['offline_access']);
+            validate.validateClientJson(response, body, {scope: ['offline_access']});
             //Get the user info
             helper.getUserInfo(tokens.access_token,
               function (error, response, body) {
@@ -68,7 +68,7 @@ describe('Grant Type Password', function () {
         //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body, ['*']);
+            validate.validateClientJson(response, body, {});
             //Get the user info
             helper.getUserInfo(tokens.access_token,
               function (error, response, body) {

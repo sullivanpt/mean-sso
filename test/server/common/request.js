@@ -1,7 +1,7 @@
 'use strict';
 /*jshint camelcase: false */
 
-var properties = require('./properties.js').properties;
+var properties = require('./properties').properties;
 var requestLib = require('request');
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
@@ -38,21 +38,21 @@ exports.request = {
    * @param code The Authorization code
    * @param next Standard forward to the next function call
    */
-  postOAuthCode: function (code, next) {
+  postOAuthCode: function (options, code, next) {
     requestLib.post(
       properties.token, {
         form: {
           code: code,
           'redirect_uri': properties.redirect,
-          'client_id': properties.clientId,
-          'client_secret': properties.clientSecret,
+          'client_id': options.clientId || properties.clientId,
+          'client_secret': options.clientSecret || properties.clientSecret,
           'grant_type': 'authorization_code'
         }
       }, next);
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
-   * @param scope The optinal scope to use
+   * @param scope The optional scope to use
    * @param next Standard forward to the next function call
    */
   postOAuthPassword: function (scope, next) {
@@ -71,20 +71,22 @@ exports.request = {
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
-   * @param scope The optionally scope to use
+   * @param options For passing an optional scope, or client to use
    * @param next Standard forward to the next function call
    */
-  postOAuthClient: function (scope, next) {
+  postOAuthClient: function (options, next) {
+    var clientId = options.clientId || properties.clientId;
+    var clientSecret = options.clientSecret || properties.clientSecret;
     requestLib.post(
       properties.token, {
         form: {
           'grant_type': 'client_credentials',
           username: properties.username,
           password: properties.password,
-          scope: scope
+          scope: options.scope
         },
         headers: {
-          Authorization: 'Basic ' + new Buffer(properties.clientId + ':' + properties.clientSecret).toString('base64')
+          Authorization: 'Basic ' + new Buffer(clientId + ':' + clientSecret).toString('base64')
         }
       }, next);
   },

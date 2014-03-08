@@ -1,7 +1,9 @@
 'use strict';
 /*jshint camelcase: false */
 
-var request = require('request'),
+var assert = require('assert'),
+  request = require('request'),
+  properties = require('../common').properties,
   helper = require('../common').request,
   validate = require('../common').validate;
 
@@ -31,14 +33,14 @@ describe('Grant Type Client', function () {
     });
   });
   it('should work with asking for an access token', function (done) {
-    helper.postOAuthClient('profile account',
+    helper.postOAuthClient({scope: 'profile account'},
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
         //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body, ['profile','account']);
+            validate.validateClientJson(response, body, {scope: ['profile','account']});
             done();
           }
         );
@@ -47,17 +49,61 @@ describe('Grant Type Client', function () {
   });
   it('should work with a scope of undefined', function (done) {
     //test it with no off line access
-    helper.postOAuthClient(undefined,
+    helper.postOAuthClient({scope: undefined},
       function (error, response, body) {
         validate.validateAccessToken(response, body);
         var tokens = JSON.parse(body);
         //Get the client info
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
-            validate.validateClientJson(response, body, ['*']);
+            validate.validateClientJson(response, body, {});
             done();
           }
         );
+      }
+    );
+  });
+  it('should work for a client with a restricted scope', function (done) {
+    helper.postOAuthClient({
+        scope: 'login',
+        clientId: properties.casClientId,
+        clientSecret: properties.casClientSecret
+      }, function (error, response, body) {
+        validate.validateAccessToken(response, body);
+        var tokens = JSON.parse(body);
+        //Get the client info
+        helper.getClientInfo(tokens.access_token,
+          function (error, response, body) {
+            validate.validateClientJson(response, body, {
+              clientId: '2',
+              name: 'Trusted CAS Client',
+              scope: ['login']
+            });
+            done();
+          }
+        );
+      }
+    );
+  });
+  it('should give an error when requesting beyond a restricted scope', function (done) {
+    helper.postOAuthClient({
+        scope: 'login profile',
+        clientId: properties.casClientId,
+        clientSecret: properties.casClientSecret
+      }, function (error, response) {
+        //assert that we are getting an error code of 403
+        assert.equal(response.statusCode, 403);
+        done();
+      }
+    );
+  });
+  it('should give an error when using incorrect client credentials', function (done) {
+    helper.postOAuthClient({
+        clientSecret: 'bad-guess'
+      }, function (error, response) {
+        //assert that we are getting an error code of 401
+        assert.equal(response.statusCode, 401);
+        done();
       }
     );
   });

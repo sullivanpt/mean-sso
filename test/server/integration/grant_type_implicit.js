@@ -49,7 +49,7 @@ describe('Grant Type Implicit', function () {
         helper.getAuthorization({responseType: 'token', scope: 'profile account', state: 'rAnDom' },
           function (error, response /*, body */) {
             //Assert that we have the ?code in our URL
-            assert.equal(properties.hostname.length, response.request.href.indexOf('/#access_token='));
+            assert.equal(properties.redirect.length-1, response.request.href.indexOf('/#access_token='));
             var params = response.request.href.slice(properties.hostname.length + 2).split('&');
             var accessToken = params[0].split('=',2)[1];
             assert.equal(accessToken.length, 256);
@@ -63,7 +63,7 @@ describe('Grant Type Implicit', function () {
               //Get the client info
               helper.getClientInfo(accessToken,
                 function (error, response, body) {
-                  validate.validateClientJson(response, body, ['profile', 'account']);
+                  validate.validateClientJson(response, body, {scope: ['profile', 'account']});
                   //Get the user info
                   helper.getUserInfo(accessToken,
                     function (error, response, body) {
