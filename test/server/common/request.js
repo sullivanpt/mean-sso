@@ -1,24 +1,50 @@
 'use strict';
 /*jshint camelcase: false */
 
+var requestLib = require('request'),
+  http = require('http'),
+  https = require('https');
 var properties = require('./properties').properties;
-var requestLib = require('request');
+var server = require('../../../server').server;
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
 requestLib = requestLib.defaults({jar: true, strictSSL: false});
+
+// Generate an app to test at a known address
+// inspired by https://github.com/visionmedia/supertest
+function serverAddress(path){
+  if ('function' === typeof server) {
+    throw new Error('Application not a server');
+  }
+  var addr = server.address();
+  if (!addr){
+    throw new Error('Application not running');
+  }
+  var port = server.address().port;
+  var protocol = server instanceof https.Server ? 'https' : 'http';
+  return protocol + '://127.0.0.1:' + port + path;
+}
 
 /**
  * These are all request helpers to help with testing
  */
 exports.request = {
   /**
+   * Prepends the server under test to the url
+   */
+  serverAddress: serverAddress,
+  /**
+   * Access the underlying library
+   */
+  request: requestLib,
+  /**
    * Logins as the login dialog/form would
    * @param next Standard forward to the next function call
    */
   login: function (next) {
     requestLib.post(
-      properties.login, {
+      serverAddress(properties.login), {
         json: {
           email: properties.email,
           password: properties.password
@@ -31,7 +57,7 @@ exports.request = {
    * @param next
    */
   logout: function (next) {
-    requestLib.get(properties.logout, next || function () {});
+    requestLib.get(serverAddress(properties.logout), next || function () {});
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
@@ -40,7 +66,7 @@ exports.request = {
    */
   postOAuthCode: function (options, code, next) {
     requestLib.post(
-      properties.token, {
+      serverAddress(properties.token), {
         form: {
           code: code,
           'redirect_uri': properties.redirect,
@@ -57,7 +83,7 @@ exports.request = {
    */
   postOAuthPassword: function (scope, next) {
     requestLib.post(
-      properties.token, {
+      serverAddress(properties.token), {
         form: {
           'grant_type': 'password',
           username: properties.username,
@@ -78,7 +104,7 @@ exports.request = {
     var clientId = options.clientId || properties.clientId;
     var clientSecret = options.clientSecret || properties.clientSecret;
     requestLib.post(
-      properties.token, {
+      serverAddress(properties.token), {
         form: {
           'grant_type': 'client_credentials',
           username: properties.username,
@@ -97,7 +123,7 @@ exports.request = {
    */
   postRefeshToken: function (refreshToken, next) {
     requestLib.post(
-      properties.token, {
+      serverAddress(properties.token), {
         form: {
           'refresh_token': refreshToken,
           'grant_type': 'refresh_token'
@@ -126,7 +152,7 @@ exports.request = {
     var client_id = (options && options.clientId) || properties.clientId;
     var scope = (options && options.scope) || '';
     var state = (options && options.state) || '';
-    requestLib.get(authorization + '?redirect_uri=' + redirect_uri + '&response_type=' + response_type + '&client_id=' + client_id + '&scope=' + scope + '&state=' + state, next);
+    requestLib.get(serverAddress(authorization + '?redirect_uri=' + redirect_uri + '&response_type=' + response_type + '&client_id=' + client_id + '&scope=' + scope + '&state=' + state), next);
   },
   /**
    * Gets the user info from the OAuth2 authorization server
@@ -135,7 +161,7 @@ exports.request = {
    */
   getUserInfo: function (accessToken, next) {
     requestLib.get({
-      url: properties.userinfo,
+      url: serverAddress(properties.userinfo),
       headers: {
         Authorization: 'Bearer ' + accessToken
       }
@@ -148,7 +174,7 @@ exports.request = {
    */
   getClientInfo: function (accessToken, next) {
     requestLib.get({
-      url: properties.clientinfo,
+      url: serverAddress(properties.clientinfo),
       headers: {
         Authorization: 'Bearer ' + accessToken
       }
@@ -160,7 +186,7 @@ exports.request = {
    */
   waitForServerReady: function (done) {
     requestLib.get({
-        url: properties.hostname
+        url: serverAddress('/')
       }, function (/* error, response, body */) {
         done();
       }

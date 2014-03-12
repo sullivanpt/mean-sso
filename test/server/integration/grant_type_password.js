@@ -1,16 +1,11 @@
 'use strict';
 /*jshint camelcase: false */
 
-var request = require('request'),
-  helper = require('../common').request,
+var helper = require('../common').request,
   validate = require('../common').validate;
 
 var models = require('../../../lib/config/models'),
   accessTokens = models.model('AccessToken');
-
-//Enable cookies so that we can perform logging in correctly to the OAuth server
-//and turn off the strict SSL requirement
-var request = request.defaults({jar: true, strictSSL: false});
 
 before(function (done) {
   helper.waitForServerReady(done); // ensure server is up

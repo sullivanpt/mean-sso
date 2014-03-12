@@ -7,16 +7,15 @@ exports.properties = {
   username: 'test',
   email: 'test@test.com',
   password: 'test',
-  hostname: 'http://localhost:9000',
-  login: 'http://localhost:9000/api/session',
+  login: '/api/session',
   redirect: 'http://localhost:9000/callback/', // this represents an endpoint on the client
   clientId: 'trustedClient',
   clientSecret: 'ssh-otherpassword',
   casClientId: 'cas456',
   casClientSecret: 'ssh-othersecret',
-  token: 'http://localhost:9000/oauth2/token',
-  authorization: 'http://localhost:9000/oauth2/authorize',
-  userinfo: 'http://localhost:9000/api2/me',
-  clientinfo: 'http://localhost:9000/api2/clientinfo',
-  logout: 'http://localhost:9000/logout'
+  token: '/oauth2/token',
+  authorization: '/oauth2/authorize',
+  userinfo: '/api2/me',
+  clientinfo: '/api2/clientinfo',
+  logout: '/logout'
 };

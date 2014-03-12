@@ -2,17 +2,12 @@
 /*jshint camelcase: false */
 
 var assert = require('assert'),
-  request = require('request'),
   helper = require('../common').request,
   validate = require('../common').validate,
   properties = require('../common').properties;
 
 var models = require('../../../lib/config/models'),
   accessTokens = models.model('AccessToken');
-
-//Enable cookies so that we can perform logging in correctly to the OAuth server
-//and turn off the strict SSL requirement
-var request = request.defaults({jar: true, strictSSL: false});
 
 before(function (done) {
   helper.waitForServerReady(done); // ensure server is up
@@ -193,8 +188,8 @@ describe('Grant Type Authorization Code', function () {
     helper.login(
       function (/* error, response, body */) {
         //Get the OAuth2 authorization code
-        request.get(
-          properties.authorization + '?redirect_uri=' + properties.redirect + '&response_type=code',
+        helper.request.get(
+          helper.serverAddress(properties.authorization + '?redirect_uri=' + properties.redirect + '&response_type=code'),
           function (error, response /*, body */) {
             //assert that we are getting an error code of 400
             assert.equal(response.statusCode, 400);
