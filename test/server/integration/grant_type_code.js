@@ -7,9 +7,8 @@ var assert = require('assert'),
   validate = require('../common').validate,
   properties = require('../common').properties;
 
-require('../../../lib/models/access-token');
-var simpleModel = require('../../../lib/helpers/simple-model'),
-  accessTokens = simpleModel.model('AccessToken');
+var models = require('../../../lib/config/models'),
+  accessTokens = models.model('AccessToken');
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement

@@ -2,9 +2,8 @@
 
 var assert = require('assert');
 
-require('../../../../lib/models/access-token');
-var   simpleModel = require('../../../../lib/helpers/simple-model'),
-  accessTokens = simpleModel.model('AccessToken');
+var   models = require('../../../../lib/config/models'),
+  accessTokens = models.model('AccessToken');
 
 describe('access token saving/deleting', function () {
 
