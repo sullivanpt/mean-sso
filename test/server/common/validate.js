@@ -120,4 +120,35 @@ validate.validateAuthorizationCode = function (code) {
   assert.equal(code.length, 16);
 };
 
+/**
+ * Verifies a CAS ticket is well formed
+ * @param ticket
+ */
+validate.validateCasTicket = function (ticket) {
+  assert.equal(ticket.length, 19);
+  assert.equal(ticket.search(/^S(?:P|T)-/), 0);
+};
+
+validate.validateCas1Validation = function (options, response, body) {
+  assert.equal(response.statusCode, options.invalid ? 403 : 200);
+  var parts = body.split('\n');
+  assert.equal(parts.length, 3);
+  assert.equal(parts[0], options.invalid ? 'no' : 'yes');
+  assert.equal(parts[1], options.invalid ? '' : 'test');
+};
+
+validate.validateCas2Validation = function (options, response, body) {
+  var casUser;
+  assert.equal(response.statusCode, options.invalid ? 403 : 200);
+  // TODO: use a real SOAP parser here
+  if (options.invalid) {
+    assert.notEqual(/<cas:authenticationFailure code="INVALID_TICKET">/.test(body), -1);
+  } else {
+    assert.notEqual(/<cas:authenticationSuccess>/.test(body), -1);
+    casUser = /<cas:user>(\w*)<\/cas:user>/.exec(body);
+    assert.equal(casUser.length, 2);
+    assert.equal(casUser[1], 'test');
+  }
+};
+
 exports.validate = validate;

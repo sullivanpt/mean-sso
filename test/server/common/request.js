@@ -2,7 +2,6 @@
 /*jshint camelcase: false */
 
 var requestLib = require('request'),
-  http = require('http'),
   https = require('https');
 var properties = require('./properties').properties;
 var server = require('../../../server').server;
@@ -178,6 +177,29 @@ exports.request = {
       headers: {
         Authorization: 'Bearer ' + accessToken
       }
+    }, next);
+  },
+  /**
+   * Check login for Trust Authentication.
+   * @param options
+   * @param next
+   */
+  getCasLogin: function (options, next) {
+    var redirect_uri = (options && options.redirect) || properties.redirect;
+    requestLib.get({
+      url: serverAddress(properties.casLogin + '?service=' + redirect_uri)
+    }, next);
+  },
+  /**
+   * Check the validity of the service ticket.
+   * @param options
+   * @param next
+   */
+  getCasValidate: function (options, ticket, next) {
+    var endPoint = (options.version === '1.0') ? properties.casValidate : properties.casServiceValidate;
+    var redirect_uri = (options && options.redirect) || properties.redirect;
+    requestLib.get({
+      url: serverAddress(endPoint + '?service=' + redirect_uri + '&ticket=' + ticket)
     }, next);
   },
   /**
