@@ -112,6 +112,7 @@ describe('Grant Type CAS', function () {
   });
   // TODO: it should not return a ticket when login fails
   // TODO: it should recognize CAS logout endpoint the same as logout
+  // TODO: it should restrict scope to 'login'
   it('should give an error with an unregistered redirectUri', function (done) {
     //Log into the OAuth2 server as bob
     helper.login(

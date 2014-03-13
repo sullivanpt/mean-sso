@@ -203,6 +203,38 @@ exports.request = {
     }, next);
   },
   /**
+   * Gets the authorization code from the CAS OAuth2 authorization server
+   */
+  getCasOAuthAuthorization: function (options, next) {
+    var authorization = (options && options.authorization) || properties.casOAuthAuthorization;
+    var redirect_uri = (options && options.redirect) || properties.redirect;
+    var client_id = (options && options.clientId) || properties.casClientId;
+    requestLib.get(serverAddress(authorization + '?redirect_uri=' + redirect_uri + '&client_id=' + client_id), next);
+  },
+  /**
+   * Get the OAuth2 Authorization server access token from the code
+   * @param code The Authorization code
+   * @param next Standard forward to the next function call
+   */
+  casGetOAuthCode: function (options, code, next) {
+    var redirect_uri = (options && options.redirect) || properties.redirect;
+    var client_id = (options && options.clientId) || properties.casClientId;
+    var client_secret = options.clientSecret || properties.casClientSecret;
+    requestLib.get(
+      serverAddress(properties.casOAuthToken +
+        '?redirect_uri=' + redirect_uri +
+        '&client_id=' + client_id +
+        '&client_secret=' + client_secret +
+        '&code=' + code),
+      next);
+  },
+  /**
+   * Gets the user info (username) from the CAS OAuth2 authorization server
+   */
+  casGetUserInfo: function (accessToken, next) {
+    requestLib.get(serverAddress(properties.casOAuthProfile + '?access_token=' + accessToken), next);
+  },
+  /**
    * Wait for server to run, then call done.
    * TODO: fix me. currently this is just a delay, it needs a loop.
    */
