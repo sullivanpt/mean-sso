@@ -18,7 +18,7 @@ function serverAddress(path){
   }
   var addr = server.address();
   if (!addr){
-    throw new Error('Application not running');
+    return 'http://localhost:9000' + path; // default path for debugging local server
   }
   var port = server.address().port;
   var protocol = server instanceof https.Server ? 'https' : 'http';

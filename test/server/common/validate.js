@@ -88,7 +88,7 @@ validate.validateClientJson = function (response, body, options) {
   var jsonResponse = JSON.parse(body);
   assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
   assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.client_id, options.clientId || '4');
+  assert.ok(jsonResponse.client_id);
   assert.equal(jsonResponse.name, options.name || 'Samplr3');
   assert.deepEqual(jsonResponse.scope, options.scope || ['*']);
 };

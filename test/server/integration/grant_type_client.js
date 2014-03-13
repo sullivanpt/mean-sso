@@ -69,7 +69,6 @@ describe('Grant Type Client', function () {
         helper.getClientInfo(tokens.access_token,
           function (error, response, body) {
             validate.validateClientJson(response, body, {
-              clientId: '2',
               name: 'Trusted CAS Client',
               scope: ['login']
             });

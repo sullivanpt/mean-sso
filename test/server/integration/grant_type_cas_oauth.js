@@ -63,7 +63,6 @@ describe('Grant Type CAS OAuth2', function () {
                       helper.getClientInfo(accessToken,
                         function (error, response, body) {
                           validate.validateClientJson(response, body, {
-                            clientId: '2',
                             name: 'Trusted CAS Client',
                             scope: ['login']
                           });
