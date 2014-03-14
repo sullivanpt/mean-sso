@@ -6,7 +6,7 @@ var assert = require('assert'),
   properties = require('../common').properties;
 
 var models = require('../../../lib/config/models'),
-  accessTokens = models.model('AccessToken');
+  AccessToken = models.model('AccessToken');
 
 before(function (done) {
   helper.waitForServerReady(done); // ensure server is up
@@ -21,7 +21,7 @@ describe('Grant Type Implicit', function () {
   //set the time out to be 20 seconds
   this.timeout(20000);
   it('should remove all tokens', function (done) {
-    accessTokens.removeAll(function () {
+    AccessToken.remove(function () {
       done();
     });
   });
@@ -115,10 +115,5 @@ describe('Grant Type Implicit', function () {
         );
       }
     );
-  });
-  it('should remove all tokens', function (done) {
-    accessTokens.removeAll(function () {
-      done();
-    });
   });
 });
