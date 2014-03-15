@@ -237,13 +237,16 @@ exports.request = {
   /**
    * Wait for server to run, then call done.
    * TODO: fix me. currently this is just a delay, it needs a loop.
+   * See https://github.com/kcbanner/connect-mongo/issues/70
    */
   waitForServerReady: function (done) {
-    requestLib.get({
-        url: serverAddress('/')
-      }, function (/* error, response, body */) {
-        done();
-      }
-    );
+    setTimeout(function () {
+      requestLib.get({
+          url: serverAddress('/')
+        }, function (/* error, response, body */) {
+          done();
+        }
+      );
+    }, 200);
   }
 };
