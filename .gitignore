@@ -8,6 +8,7 @@ app/version.json
 heroku
 /views
 dist
+.env
 
 # IntellijIdea
 *.iml

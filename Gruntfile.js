@@ -401,6 +401,12 @@ module.exports = function (grunt) {
 
     },
     env: {
+      prod: {
+        src: '.env'
+      },
+      dev: {
+        src: '.env'
+      },
       test: {
         NODE_ENV: 'test'
       }
@@ -435,7 +441,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'express:prod', 'open', 'express-keepalive']);
+      return grunt.task.run(['build', 'env:prod', 'express:prod', 'open', 'express-keepalive']);
     }
 
     grunt.task.run([
@@ -444,6 +450,7 @@ module.exports = function (grunt) {
       'bower-install',
       'concurrent:server',
 //      'autoprefixer',
+      'env:dev',
       'express:dev',
       'open',
       'watch'
@@ -474,6 +481,7 @@ module.exports = function (grunt) {
       'version',
       'concurrent:test',
 //      'autoprefixer',
+      'env:test',
       'karma:' + target
     ]);
   });
