@@ -186,17 +186,14 @@ validate.validateCas2Validation = function (options, response, body) {
 validate.validateCasAccessToken = function (response, body) {
   assert.equal(response.statusCode, 200);
   var formTokens = body.split('&');
-  assert.equal(response.headers['content-type'], 'application/x-www-form-urlencoded');
-  assert.equal(formTokens.length, 3);
+  assert.equal(response.headers['content-type'], 'text/plain');
+  assert.equal(formTokens.length, 2);
   var token = formTokens[0].split('=');
   assert.equal(token[0], 'access_token');
   assert.equal(token[1].length, 256);
   var expires = formTokens[1].split('=');
-  assert.equal(expires[0], 'expires_in');
+  assert.equal(expires[0], 'expires');
   assert.equal(expires[1], 3600);
-  var type = formTokens[2].split('=');
-  assert.equal(type[0], 'token_type');
-  assert.equal(type[1], 'Bearer');
 };
 
 /**
