@@ -5,7 +5,7 @@ angular.module('meanSsoApp')
     return {
       templateUrl: 'partials/navbar',
       restrict: 'E',
-      controller: ['$scope', '$location', function ($scope, $location) {
+      controller: function ($scope, $location) {
         $scope.menu = [{
           'title': 'Home',
           'link': '/'
@@ -17,6 +17,6 @@ angular.module('meanSsoApp')
         $scope.isActive = function(route) {
           return route === $location.path();
         };
-      }]
+      }
     };
   });
