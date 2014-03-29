@@ -25,7 +25,11 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="container">
+      <navbar></navbar>
+      <div ng-view=""></div>
+      <footbar></footbar>
+    </div>
 
     <!-- public static configuration data for our angular app  -->
     <script>
@@ -71,6 +75,7 @@
         <script src="scripts/directives/mongooseError.js"></script>
         <script src="scripts/directives/navbar.js"></script>
         <script src="scripts/services/mean-sso-config.js"></script>
+        <script src="scripts/directives/footbar.js"></script>
         <!-- endbuild -->
 </body>
 </html>

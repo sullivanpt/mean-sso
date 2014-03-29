@@ -5,7 +5,4 @@ angular.module('meanSsoApp')
     $http.get('/api/awesomeThings').success(function(awesomeThings) {
       $scope.awesomeThings = awesomeThings;
     });
-    $http.get('version.json').success(function(version) {
-      $scope.version = version;
-    });
   });
