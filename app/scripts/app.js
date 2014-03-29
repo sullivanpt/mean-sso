@@ -46,6 +46,7 @@ angular.module('meanSsoApp', [
       };
     }]);
   })
+  .run(function (MeanSsoConfig) {/*jshint unused:false*/}) // forcing config service to load
   .run(function ($rootScope, $location, Auth) {
 
     // Redirect to login if route requires auth and you're not logged in
