@@ -22,7 +22,10 @@
     "passport-oauth2-client-password": "0.1.x",
     "connect-ensure-login": "0.1.x",
     "ejs": "~0.8.4",
-    "cors": "~2.1.1"
+    "cors": "~2.1.1",
+    "ms": "^0.6.2",
+    "ratelimiter": "^1.0.1",
+    "redis": "^0.10.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
