@@ -1,4 +1,4 @@
-<a href="/auth/facebook" target="_self"><img src="images/facebook.png"/></a>
-<a href="/auth/github" target="_self"><img src="images/github.png"/></a>
-<a href="/auth/twitter" target="_self"><img src="images/twitter.png"/></a>
-<a href="/auth/google" target="_self"><img src="images/google.png"/></a>
+<a ng-show="MeanSsoConfig.hasProvider('facebook')" href="/auth/facebook" target="_self"><img src="images/facebook.png"/></a>
+<a ng-show="MeanSsoConfig.hasProvider('github')" href="/auth/github" target="_self"><img src="images/github.png"/></a>
+<a ng-show="MeanSsoConfig.hasProvider('twitter')" href="/auth/twitter" target="_self"><img src="images/twitter.png"/></a>
+<a ng-show="MeanSsoConfig.hasProvider('google')" href="/auth/google" target="_self"><img src="images/google.png"/></a>

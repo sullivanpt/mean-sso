@@ -428,7 +428,7 @@ module.exports = function (grunt) {
   grunt.registerTask('version', 'Tag the current build revision', function () {
     grunt.event.once('git-describe', function (rev) {
       grunt.file.write(grunt.config('yeoman.app') + '/version.json', JSON.stringify({
-        revision: rev[0],
+        revision: rev.object + (rev.dirty || ''),
         date: grunt.template.today('isoDateTime')
       }));
     });

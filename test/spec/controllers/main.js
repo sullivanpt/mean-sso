@@ -14,8 +14,6 @@ describe('Controller: MainCtrl', function () {
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET('/api/awesomeThings')
       .respond(['HTML5 Boilerplate', 'AngularJS', 'Karma', 'Express']);
-    $httpBackend.expectGET('version.json')
-      .respond({revision:'abc1234',date:'2014-03-02T19:36:34'});
     scope = $rootScope.$new();
     MainCtrl = $controller('MainCtrl', {
       $scope: scope
@@ -26,6 +24,5 @@ describe('Controller: MainCtrl', function () {
     expect(scope.awesomeThings).toBeUndefined();
     $httpBackend.flush();
     expect(scope.awesomeThings.length).toBe(4);
-    expect(scope.version.revision).toBe('abc1234');
   });
 });

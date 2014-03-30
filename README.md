@@ -33,6 +33,7 @@ Like other generator-angular applications, the DEV and TEST environment's server
 * (optional) msysgit v1.8.5.2 for bash shell (and version control)
 * (optional) Heroku toolbelt v3.2.0 (tools only) for deployment
 * MongoDB v2.4.9 (localhost with open credentials)
+* Redis 2.4 (localhost with open credentials)
 * Node.js v0.10.25
 * npm install -g yo generator-angular-fullstack
 
