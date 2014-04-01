@@ -4,7 +4,8 @@ angular.module('meanSsoApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'cloudinary'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

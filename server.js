@@ -24,6 +24,9 @@ require('./lib/config/passport')();
 // OAuth2 Server Configuration
 require('./lib/config/oauth2');
 
+// Cloudinary integration configuration
+require('./lib/config/cloudinary');
+
 var app = express();
 
 // Express settings
