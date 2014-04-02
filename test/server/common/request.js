@@ -2,13 +2,15 @@
 /*jshint camelcase: false */
 
 var requestLib = require('request'),
+  toughCookie = require('tough-cookie'),
   https = require('https');
 var properties = require('./properties').properties;
 var server = require('../../../server').server;
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
-requestLib = requestLib.defaults({jar: true, strictSSL: false});
+var jar = requestLib.jar();
+requestLib = requestLib.defaults({jar: jar, strictSSL: false});
 
 // Generate an app to test at a known address
 // inspired by https://github.com/visionmedia/supertest
@@ -23,6 +25,22 @@ function serverAddress(path){
   var port = server.address().port;
   var protocol = server instanceof https.Server ? 'https' : 'http';
   return protocol + '://127.0.0.1:' + port + path;
+}
+
+/**
+ * Mocks AngularJS XSRF support as expected by express.csrf()
+ */
+function addXsrfHeader(options) {
+  /* global unescape: false */
+  var cookies = jar.getCookieString(serverAddress('/')).split(';').map(function (s) {
+    var c = toughCookie.Cookie.parse(s);
+    if (c.key === 'XSRF-TOKEN') { return c; }
+  });
+  if (cookies.length) {
+    options.headers = options.headers || {};
+    options.headers['X-XSRF-TOKEN'] = unescape(cookies[0].value);
+  }
+  return options;
 }
 
 /**
@@ -42,13 +60,16 @@ exports.request = {
    * @param next Standard forward to the next function call
    */
   login: function (next) {
-    requestLib.post(
-      serverAddress(properties.login), {
-        json: {
-          email: properties.email,
-          password: properties.password
-        }
-      }, next);
+    requestLib.get(serverAddress('/'), function (err) { // retrieve XSRF token
+      if (err) { return next(err); }
+      requestLib.post(
+        serverAddress(properties.login), addXsrfHeader({
+          json: {
+            email: properties.email,
+            password: properties.password
+          }
+        }), next);
+    });
   },
   /**
    * Logout as the user would to ensure session cookies are cleared

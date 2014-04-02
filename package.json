@@ -75,7 +75,8 @@
     "request": "~2.34.0",
     "grunt-git-describe": "~2.3.2",
     "grunt-contrib-less": "~0.10.0",
-    "chai": "~1.9.0"
+    "chai": "~1.9.0",
+    "tough-cookie": "^0.12.1"
   },
   "engines": {
     "node": "0.10.x"
