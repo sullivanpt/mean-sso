@@ -18,6 +18,7 @@ exports.properties = {
   userinfo: '/api2/me',
   clientinfo: '/api2/clientinfo',
   logout: '/logout',
+  untrustedClientId: 'xyz123',
   //
   // CAS endpoints
   //

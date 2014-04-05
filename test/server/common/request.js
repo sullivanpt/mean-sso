@@ -58,17 +58,19 @@ exports.request = {
   /**
    * Logins as the login dialog/form would
    * @param next Standard forward to the next function call
+   * @param options if options.noXsrf don't include CSRF
    */
-  login: function (next) {
+  login: function (next, options) {
+    options = options || {};
     requestLib.get(serverAddress('/'), function (err) { // retrieve XSRF token
       if (err) { return next(err); }
-      requestLib.post(
-        serverAddress(properties.login), addXsrfHeader({
-          json: {
-            email: properties.email,
-            password: properties.password
-          }
-        }), next);
+      var addHeader = options.noXsrf ? function(x) {return x;} : addXsrfHeader;
+      requestLib.post(serverAddress(properties.login), addHeader({
+        json: {
+          email: properties.email,
+          password: properties.password
+        }
+      }), next);
     });
   },
   /**
@@ -176,16 +178,20 @@ exports.request = {
   },
   /**
    * Gets the user info from the OAuth2 authorization server
-   * @param accessToken The access token to get the user info from
+   * @param options if options.accessToken The access token to get the user info from, or pass accessToken as options.
    * @param next Standard forward to the next function call
    */
-  getUserInfo: function (accessToken, next) {
-    requestLib.get({
+  getUserInfo: function (options, next) {
+    options = (typeof options === 'string' || options instanceof String) ? { accessToken: options } : (options || {});
+    var params = {
       url: serverAddress(properties.userinfo),
-      headers: {
-        Authorization: 'Bearer ' + accessToken
-      }
-    }, next);
+      headers: options.accessToken && {
+        Authorization: 'Bearer ' + options.accessToken
+      } || options.cors && {
+        Origin: 'http://elsewhere.com'
+      } || {}
+    };
+    requestLib.get(params, next);
   },
   /**
    * Gets the client info from the OAuth2 authorization server
@@ -254,6 +260,12 @@ exports.request = {
    */
   casGetUserInfo: function (accessToken, next) {
     requestLib.get(serverAddress(properties.casOAuthProfile + '?access_token=' + accessToken), next);
+  },
+  /**
+   * Does a GET on a rate limited route with a very low limit
+   */
+  getRateLimited: function (next) {
+    requestLib.get(serverAddress('/test/security-policy/limiter'), next);
   },
   /**
    * Wait for server to run, then call done.

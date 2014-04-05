@@ -56,7 +56,7 @@ module.exports = function (grunt) {
       },
       jsTest: {
         files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
+        tasks: ['newer:jshint:testMocha', 'newer:jshint:testJasmine', 'karma']
       },
 //      styles: {
 //        files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -109,11 +109,17 @@ module.exports = function (grunt) {
       all: [
         '<%= yeoman.app %>/scripts/{,*/}*.js'
       ],
-      test: {
+      testMocha: {
+        options: {
+          jshintrc: 'test/server/.jshintrc'
+        },
+        src: ['test/server/**/*.js']
+      },
+      testJasmine: {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: ['test/**/*.js']
+        src: ['test/spec/**/*.js']
       }
     },
 
