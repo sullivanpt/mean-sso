@@ -26,6 +26,10 @@ angular.module('meanSsoApp', [
         controller: 'SettingsCtrl',
         authenticate: true
       })
+      .when('/test', {
+        templateUrl: 'partials/test',
+        controller: 'TestCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
