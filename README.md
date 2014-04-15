@@ -35,7 +35,7 @@ Like other generator-angular applications, the DEV and TEST environment's server
 * MongoDB v2.4.9 (localhost with open credentials)
 * Redis 2.4 (localhost with open credentials)
 * Node.js v0.10.25
-* (not yet optional) Cloudinary
+* (optional) Cloudinary
 * npm install -g yo generator-angular-fullstack
 
 ** One time setup **

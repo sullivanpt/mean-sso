@@ -12,7 +12,7 @@
     "angular-cookies": "1.2.14",
     "angular-sanitize": "1.2.14",
     "angular-route": "1.2.14",
-    "cloudinary_angular": "git://github.com/jbcpollak/cloudinary_angular",
+    "cloudinary_angular": "0.0.4",
     "cloudinary_js": "git://github.com/cloudinary/cloudinary_js#v1.0.12"
   },
   "devDependencies": {

@@ -17,8 +17,11 @@ angular.module('meanSsoApp')
         return that.providers.indexOf(provider) !== -1;
       };
 
-      $http.get('version.json').success(function(version) {
-        that.version = version;
-      });
+      this.version = decoded.version;
+
+      // Initialize jquery cloudinary
+      if ($window.$ && $window.$.cloudinary && decoded.cloudinary) {
+        $window.$.cloudinary.config(decoded.cloudinary);
+      }
     }
   });
