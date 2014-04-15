@@ -40,6 +40,9 @@ var server = app.listen(config.port, function () {
   console.log('Express server listening on port %d in %s mode', config.port, app.get('env'));
 });
 
+// WebSockets Configuration
+require('./lib/config/primus')(server);
+
 // Expose server for testing
 app.server = server;
 

@@ -11,13 +11,14 @@ angular.module('meanSsoApp')
       var that = this;
 
       var decoded = JSON.parse($window.MEANSSO_CONFIG);
+      angular.extend(this, decoded);
 
-      this.providers = decoded.providers;
+      /**
+       * Helper to test if a provider is enabled
+       */
       this.hasProvider = function (provider) {
         return that.providers.indexOf(provider) !== -1;
       };
-
-      this.version = decoded.version;
 
       // Initialize jquery cloudinary
       if ($window.$ && $window.$.cloudinary && decoded.cloudinary) {

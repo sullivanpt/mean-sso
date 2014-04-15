@@ -1,6 +1,10 @@
 <div class="footer">
   <div class="row">
-    <div class="col-xs-6">♥ from the Yeoman team</div>
+    <div class="col-xs-6">♥ from the Yeoman team
+      <div class="navbar-right">
+        <span ng-show="Notify.connected" class="glyphicon glyphicon-signal"></span>
+      </div>
+    </div>
     <div class="col-xs-6 text-right">version {{MeanSsoConfig.version.revision}}</div>
   </div>
 </div>
