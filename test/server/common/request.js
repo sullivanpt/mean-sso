@@ -268,6 +268,23 @@ exports.request = {
     requestLib.get(serverAddress('/test/security-policy/limiter'), next);
   },
   /**
+   * Polls the primusJS WebSocket route
+   * @param options if options.accessToken The access token to get the user info from, or pass accessToken as options.
+   * @param next Standard forward to the next function call
+   */
+  getPrimus: function (options, next) {
+    var authQuery = options.access_token && ('&access_token=' + options.access_token) || '';
+    var params = {
+      url: serverAddress(properties.primus + authQuery),
+      headers: options.accessToken && {
+        Authorization: 'Bearer ' + options.accessToken
+      } || options.cors && {
+        Origin: 'http://elsewhere.com'
+      } || {}
+    };
+    requestLib.get(params, next);
+  },
+  /**
    * Wait for server to run, then call done.
    * TODO: fix me. currently this is just a delay, it needs a loop.
    * See https://github.com/kcbanner/connect-mongo/issues/70

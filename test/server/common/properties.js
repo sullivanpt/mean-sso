@@ -18,6 +18,7 @@ exports.properties = {
   userinfo: '/api2/me',
   clientinfo: '/api2/clientinfo',
   logout: '/logout',
+  primus: '/primus/?EIO=2&transport=polling&b64=1',
   untrustedClientId: 'xyz123',
   //
   // CAS endpoints

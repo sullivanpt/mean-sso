@@ -18,10 +18,11 @@ describe('Security Policy', function () {
   //set the time out to be 20 seconds
   this.timeout(20000);
   it('knownUserApi should require authentication', function (done) {
-    helper.logout();
-    helper.getUserInfo(null, function (error, response) {
-      expect(response.statusCode).to.equal(401);
-      done();
+    helper.logout(function () {
+      helper.getUserInfo(null, function (error, response) {
+        expect(response.statusCode).to.equal(401);
+        done();
+      });
     });
   });
   it('rate limited route should limit access per time span', function (done) {

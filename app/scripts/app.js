@@ -51,7 +51,7 @@ angular.module('meanSsoApp', [
       };
     }]);
   })
-  .run(function (MeanSsoConfig, Notify) {/*jshint unused:false*/}) // forcing config and notify services to load
+  .run(function (MeanSsoConfig, MeanSsoPrimus) {/*jshint unused:false*/}) // forcing config and notify services to load
   .run(function ($rootScope, $location, Auth) {
 
     // Redirect to login if route requires auth and you're not logged in

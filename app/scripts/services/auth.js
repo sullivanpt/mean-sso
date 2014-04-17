@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .factory('Auth', function Auth($location, $rootScope, Session, User, $cookieStore, $window) {
+  .factory('Auth', function Auth($location, $rootScope, Session, User, MeanSsoPrimus, $cookieStore, $window) {
     
     // Get currentUser from cookie
     $rootScope.currentUser = $cookieStore.get('user') || null;
@@ -23,6 +23,7 @@ angular.module('meanSsoApp')
           email: user.email,
           password: user.password
         }, function(user) {
+          MeanSsoPrimus.setUserAuthorizationHeader('cookie');
           if (user.redirectTo) {
             // inline signal to the client that a redirect is required
             $window.location = user.redirectTo;
@@ -45,6 +46,7 @@ angular.module('meanSsoApp')
         var cb = callback || angular.noop;
 
         return Session.delete(function() {
+            MeanSsoPrimus.setUserAuthorizationHeader();
             $rootScope.currentUser = null;
             return cb();
           },
@@ -65,6 +67,7 @@ angular.module('meanSsoApp')
 
         return User.save(user,
           function(user) {
+            MeanSsoPrimus.setUserAuthorizationHeader('cookie');
             $rootScope.currentUser = user;
             return cb(user);
           },
@@ -111,6 +114,6 @@ angular.module('meanSsoApp')
       isLoggedIn: function() {
         var user = $rootScope.currentUser;
         return !!user;
-      },
+      }
     };
   });
