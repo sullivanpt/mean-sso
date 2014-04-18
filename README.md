@@ -35,8 +35,13 @@ Like other generator-angular applications, the DEV and TEST environment's server
 * MongoDB v2.4.9 (localhost with open credentials)
 * Redis 2.4 (localhost with open credentials)
 * Node.js v0.10.25
-* (optional) Cloudinary
 * npm install -g yo generator-angular-fullstack
+
+** Other Coolness **
+* (optional) Cloudinary image management with direct client side upload and download
+* (optional) Authenticated WebSockets built on PrimusJS and Engineio
+* Horizontal scaling notifications built on Redis Pub/Sub
+* Simple 'best practices' route security model with CORS support for third party clients
 
 ** One time setup **
 * git clone git@github.com:sullivanpt/mean-sso.git

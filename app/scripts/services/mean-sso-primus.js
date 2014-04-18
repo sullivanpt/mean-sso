@@ -41,7 +41,7 @@ angular.module('meanSsoApp')
       // construct a new connection
       self._primus = new $window.Primus(MeanSsoConfig.primus.url + buildAuthorizationQuery());
 
-      // install event handlers. TODO: finish these
+      // install event handlers. TODO: finish these. See https://github.com/james-huston/angular-provider-engineio/blob/master/src/angular-provider-engineio.js
       self._primus.on('data', function message(data) {
         console.log('Received a new message from the server', data);
       });

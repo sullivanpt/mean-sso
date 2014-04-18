@@ -12,6 +12,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 // Application Config
 var config = require('./lib/config/config');
 
+// Connect to node siblings
+require('./lib/config/redis-pubsub-emitter');
+
 // Bootstrap models
 require('./lib/config/models');
 

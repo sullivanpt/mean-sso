@@ -28,7 +28,8 @@
     "redis": "^0.10.1",
     "cloudinary": "~1.0.8",
     "primus": "^2.1.4",
-    "engine.io": "^1.0.5"
+    "engine.io": "^1.0.5",
+    "redis-pubsub-emitter": "^0.3.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
