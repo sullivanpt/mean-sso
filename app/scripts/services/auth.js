@@ -6,6 +6,11 @@ angular.module('meanSsoApp')
     // Get currentUser from cookie
     $rootScope.currentUser = $cookieStore.get('user') || null;
     $cookieStore.remove('user');
+    if ($rootScope.currentUser) {
+      MeanSsoPrimus.setUserAuthorizationHeader('cookie');
+    } else {
+      MeanSsoPrimus.setUserAuthorizationHeader();
+    }
 
     return {
 

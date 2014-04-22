@@ -74,7 +74,7 @@ angular.module('meanSsoApp')
       });
 
       // test send
-      self._primus.write('Hello from a client');
+      // self._primus.write('Hello from a client');
     }
 
     /**
