@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .factory('Auth', function Auth($location, $rootScope, Session, User, MeanSsoPrimus, $cookieStore, $window) {
+  .factory('Auth', function Auth($location, $rootScope, MeanSsoApi, MeanSsoPrimus, $cookieStore, $window) {
     
     // Get currentUser from cookie
     $rootScope.currentUser = $cookieStore.get('user') || null;
@@ -24,7 +24,7 @@ angular.module('meanSsoApp')
       login: function(user, callback) {
         var cb = callback || angular.noop;
 
-        return Session.save({
+        return MeanSsoApi.session.save({
           email: user.email,
           password: user.password
         }, function(user) {
@@ -50,7 +50,7 @@ angular.module('meanSsoApp')
       logout: function(callback) {
         var cb = callback || angular.noop;
 
-        return Session.delete(function() {
+        return MeanSsoApi.session.delete(function() {
             MeanSsoPrimus.setUserAuthorizationHeader();
             $rootScope.currentUser = null;
             return cb();
@@ -70,7 +70,7 @@ angular.module('meanSsoApp')
       createUser: function(user, callback) {
         var cb = callback || angular.noop;
 
-        return User.save(user,
+        return MeanSsoApi.users.save(user,
           function(user) {
             MeanSsoPrimus.setUserAuthorizationHeader('cookie');
             $rootScope.currentUser = user;
@@ -92,7 +92,7 @@ angular.module('meanSsoApp')
       changePassword: function(oldPassword, newPassword, callback) {
         var cb = callback || angular.noop;
 
-        return User.update({
+        return MeanSsoApi.users.update({
           oldPassword: oldPassword,
           newPassword: newPassword
         }, function(user) {
@@ -108,7 +108,7 @@ angular.module('meanSsoApp')
        * @return {Object} user
        */
       currentUser: function() {
-        return User.get();
+        return MeanSsoApi.users.get();
       },
 
       /**

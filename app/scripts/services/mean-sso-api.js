@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .factory('User', function ($resource) {
-    return $resource('/api/users/:id', {
+  .service('MeanSsoApi', function MeanSsoApi($resource) {
+    // AngularJS will instantiate a singleton by calling "new" on this function
+    this.users = $resource('/api/users/:id', {
       id: '@id'
     }, { //parameters default
       update: {
@@ -15,5 +16,8 @@ angular.module('meanSsoApp')
           id:'me'
         }
       }
-	  });
+    });
+
+    this.session =  $resource('/api/session/');
+
   });

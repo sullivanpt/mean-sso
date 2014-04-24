@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth) {
+  .controller('SettingsCtrl', function ($scope, Auth) {
     $scope.errors = {};
 
     $scope.changePassword = function(form) {
