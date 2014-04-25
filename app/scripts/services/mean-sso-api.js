@@ -20,4 +20,10 @@ angular.module('meanSsoApp')
 
     this.session =  $resource('/api/session/');
 
+    this.mePersonae = $resource('/api2/me/personae/:personaID', {
+      personaID: '@id'
+    }, {
+      update: { method: 'PUT' }
+    });
+    this.personae = $resource('/api2/personae/:personaID');
   });

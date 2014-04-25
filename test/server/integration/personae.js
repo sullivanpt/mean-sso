@@ -66,13 +66,13 @@ describe('Personae Controller', function() {
   it('should create persona for user me', function(done) {
     requestCore.request.post(requestCore.serverAddress('/api2/me/personae'), requestCore.addCsrfHeader({
       json: {
-        name: 'Persona A',
+        alias: 'Persona A',
         bio: 'Something about A'
       }
     }), function (err, resp, body) {
       personaA = body;
       expect(resp.statusCode).to.equal(201);
-      expect(body.name).to.equal('Persona A');
+      expect(body.alias).to.equal('Persona A');
       expect(body.bio).to.equal('Something about A');
       expect(body.userID).to.equal(userMe.id);
       done();
@@ -82,13 +82,13 @@ describe('Personae Controller', function() {
   it('should create alternate persona for user me', function(done) {
     requestCore.request.post(requestCore.serverAddress('/api2/me/personae'), requestCore.addCsrfHeader({
       json: {
-        name: 'Persona B',
+        alias: 'Persona B',
         bio: 'Something about B'
       }
     }), function (err, resp, body) {
       personaB = body;
       expect(resp.statusCode).to.equal(201);
-      expect(body.name).to.equal('Persona B');
+      expect(body.alias).to.equal('Persona B');
       expect(body.bio).to.equal('Something about B');
       expect(body.userID).to.equal(userMe.id);
       done();
@@ -100,27 +100,27 @@ describe('Personae Controller', function() {
       expect(resp.statusCode).to.equal(200);
       expect(body).to.be.an('array');
       expect(body.length).to.equal(2);
-      body.sort(function (a,b) { return a.name > b.name; });
-      expect(body[0].name).to.equal('Persona A');
+      body.sort(function (a,b) { return a.alias > b.alias; });
+      expect(body[0].alias).to.equal('Persona A');
       expect(body[0].id).to.equal(personaA.id);
       expect(body[0].userID).to.equal(userMe.id);
-      expect(body[1].name).to.equal('Persona B');
+      expect(body[1].alias).to.equal('Persona B');
       done();
     });
   });
 
   it('should return a specific persona for user me', function(done) {
-    requestCore.request.get(requestCore.serverAddress('/api2/me/personae/' + personaA._id), {json: true}, function (err, resp, body) {
+    requestCore.request.get(requestCore.serverAddress('/api2/me/personae/' + personaA.id), {json: true}, function (err, resp, body) {
       expect(resp.statusCode).to.equal(200);
-      expect(body.name).to.equal('Persona A');
+      expect(body.alias).to.equal('Persona A');
       done();
     });
   });
 
   it('should return a specific public persona for user me', function(done) {
-    requestCore.request.get(requestCore.serverAddress('/api2/personae/' + personaA._id), {json: true}, function (err, resp, body) {
+    requestCore.request.get(requestCore.serverAddress('/api2/personae/' + personaA.id), {json: true}, function (err, resp, body) {
       expect(resp.statusCode).to.equal(200);
-      expect(body.name).to.equal('Persona A');
+      expect(body.alias).to.equal('Persona A');
       expect(body.userID).to.be.undefined;
       done();
     });
@@ -131,7 +131,7 @@ describe('Personae Controller', function() {
       expect(resp.statusCode).to.equal(200);
       expect(body).to.be.an('array');
       expect(body.length).to.equal(1);
-      expect(body[0].name).to.equal('Persona A');
+      expect(body[0].alias).to.equal('Persona A');
       expect(body[0].userID).to.be.undefined;
       done();
     });
