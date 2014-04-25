@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .controller('TestCtrl', function ($scope, cloudinaryApi) {
-    cloudinaryApi.get({}, function (value) {
+  .controller('TestCtrl', function ($scope, MeanSsoApi) {
+    MeanSsoApi.imagesSignRequest.get({}, function (value) {
       // value: {timestamp: 1397009646, transformation: "c_limit,h_500,w_500", format: "jpg", signature: "885e150c7f5a7cbd0ea565442df72d91869635e5", api_key: "511551256285167"}
       console.log('SUCCESS ', value);
       $scope.cloudinaryData = {

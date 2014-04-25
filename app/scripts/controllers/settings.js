@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('meanSsoApp')
-  .controller('SettingsCtrl', function ($scope, Auth, MeanSsoApi, cloudinaryApi) {
+  .controller('SettingsCtrl', function ($scope, Auth, MeanSsoApi) {
     $scope.errors = {};
 
-    cloudinaryApi.get({}, function (value) {
+    MeanSsoApi.imagesSignRequest.get({}, function (value) {
       $scope.cloudinaryData = {
         formData: angular.fromJson(angular.toJson(value)), // strip $get. http://stackoverflow.com/a/20713104
         start: function () { $scope.message = 'Uploading image...'; },
