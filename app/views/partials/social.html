@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Social Search</h1>
+  </div>
+  <div class="col-sm-6">
+    <p ng-hide="persona">Loading...</p>
+    <p ng-show="persona" class="text-right">
+      You are <a href="/settings" title="change persona">
+      <small>{{persona.alias}}</small>
+      <img cl-image height="50" width="50" public-id="persona.avatarID" class="img-rounded"/></a>
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <form class="form-horizontal" name="form" ng-submit="searchPersona(form)">
+      <div class="form-group">
+        <label class="col-sm-1 control-label"><span class="glyphicon glyphicon-search"></span></label>
+        <div class="col-sm-11"><input name="terms" ng-model="search.terms" type="text" class="form-control" placeholder="enter search terms"/></div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12" ng-show="search.found.length === 0">No results found. Try a different search term.</div>
+  <div class="col-sm-6" ng-repeat="other in search.found">
+    <div class="panel panel-info">
+      <div class="panel-heading"><a href="/social-message?o={{other.id}}&p={{persona.id}}" title="send message"><span class="glyphicon glyphicon-envelope pull-right"></span>{{other.alias}}</a></div>
+      <div class="panel-body"><img cl-image height="50" width="50" public-id="other.avatarID" class="img-rounded pull-right"/>
+        {{other.bio}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,6 +26,11 @@ angular.module('meanSsoApp', [
         controller: 'SettingsCtrl',
         authenticate: true
       })
+      .when('/social', {
+        templateUrl: 'partials/social',
+        controller: 'SocialCtrl',
+        authenticate: true
+      })
       .when('/test', {
         templateUrl: 'partials/test',
         controller: 'TestCtrl'

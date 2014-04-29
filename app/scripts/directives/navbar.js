@@ -10,6 +10,9 @@ angular.module('meanSsoApp')
           'title': 'Home',
           'link': '/'
         }, {
+          'title': 'Social',
+          'link': '/social'
+        }, {
           'title': 'Settings',
           'link': '/settings'
         }];
