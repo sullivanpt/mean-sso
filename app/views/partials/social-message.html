@@ -1,0 +1,20 @@
+<h1>Private Chat</h1>
+<p><strong>You</strong> {{persona.alias}}</p>
+<p><strong>Them</strong> {{other.alias}}</p>
+<div class="row">
+  <div class="col-sm-12">
+    <form class="form-horizontal" name="form" ng-submit="sendMessage(form)">
+      <div class="form-group">
+        <label class="col-sm-1 control-label"><span class="glyphicon glyphicon-comment"></span></label>
+        <div class="col-sm-11"><input name="text" ng-model="message.text" type="text" class="form-control" placeholder="send a message"/></div>
+      </div>
+      <input type="submit" style="display: none">
+    </form>
+  </div>
+</div>
+<div class="row" ng-repeat="rcv in messages">
+  <div ng-show="persona.id === rcv.actor" class="col-sm-1"><span class="glyphicon glyphicon-user"></span></div>
+  <div class="col-sm-11">{{rcv.text}}<span ng-hide="rcv.id" class="pull-right glyphicon glyphicon-cloud-upload"></span></div>
+  <div ng-hide="persona.id === rcv.actor" class="col-sm-1"><span class="glyphicon glyphicon-user"></span></div>
+</div>
+

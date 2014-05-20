@@ -35,6 +35,10 @@ angular.module('meanSsoApp', [
         templateUrl: 'partials/test',
         controller: 'TestCtrl'
       })
+      .when('/social-message', {
+        templateUrl: 'partials/social-message',
+        controller: 'SocialMessageCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

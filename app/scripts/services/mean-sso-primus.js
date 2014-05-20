@@ -41,19 +41,22 @@ angular.module('meanSsoApp')
       // construct a new connection
       self._primus = new $window.Primus(MeanSsoConfig.primus.url + buildAuthorizationQuery());
 
-      // install event handlers. TODO: finish these. See https://github.com/james-huston/angular-provider-engineio/blob/master/src/angular-provider-engineio.js
+      // install event handlers
       self._primus.on('data', function message(data) {
-        console.log('Received a new message from the server', data);
+        console.log('primus data', data);
+        $rootScope.$apply(function () {
+          $rootScope.$broadcast('primus', data);
+        });
       });
 
       self._primus.on('open', function open() {
-        console.log('Connection is alive and kicking');
+        console.log('primus open');
         self.connected = true;
         $rootScope.$apply();
       });
 
       self._primus.on('error', function error(err) {
-        console.error('Something horrible has happened', err, err.message);
+        console.error('primus error', err, err.message);
       });
 
       // self._primus.on('reconnect', function () {
@@ -61,14 +64,13 @@ angular.module('meanSsoApp')
       // });
 
       self._primus.on('reconnecting', function (opts) {
-        console.log('Reconnecting in %d ms', opts.timeout);
-        console.log('This is attempt %d out of %d', opts.attempt, opts.retries);
+        console.log('primus reconnect in %d ms, attempt %d of %d', opts.timeout, opts.attempt, opts.retries);
         self.connected = false;
         $rootScope.$apply();
       });
 
       self._primus.on('end', function () {
-        console.log('Connection closed');
+        console.log('primus closed');
         self.connected = false;
         // $rootScope.$apply(); -- we close this synchronously above
       });

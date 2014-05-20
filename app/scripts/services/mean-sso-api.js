@@ -33,4 +33,8 @@ angular.module('meanSsoApp')
       update: { method: 'PUT' }
     });
     this.personae = $resource('/api2/personae/:personaID');
+
+    this.messages = $resource('/api2/messages/:messageID', {
+      personaID: '@id'
+    });
   });
