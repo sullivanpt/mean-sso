@@ -29,8 +29,8 @@
     "cloudinary": "~1.0.8",
     "primus": "^2.1.4",
     "engine.io": "^1.0.5",
-    "redis-pubsub-emitter": "^0.3.0",
-    "mongoose-api-query": "^0.1.1-pre"
+    "mongoose-api-query": "^0.1.1-pre",
+    "redis-pubsub-emitter": "git+https://github.com/sullivanpt/node-redis-pubsub-emitter.git#eb35173054"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
