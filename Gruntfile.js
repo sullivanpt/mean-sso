@@ -281,6 +281,11 @@ module.exports = function (grunt) {
       }
     },
 
+    // beautify for easier debugging
+//    uglify: {
+//      options: { beautify: true }
+//    },
+
     // Replace Google CDN references
     cdnify: {
       dist: {
