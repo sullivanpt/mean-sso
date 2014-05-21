@@ -56,6 +56,10 @@ Use any of the generator-angular-fullstack commands, especially:
 * 'grunt' to build and run the entire test suite.
 * 'yo angular-fullstack:route <controller name>' to generate boiler plate for a new route.
 
+** Heroku **
+* heroku config:add ROOT_URL=https://yourdomain.com
+* WebSockets are not supported
+
 ## Scenarios currently implemented and verified
 
 ** OAuth2 Server (see ./lib/routes.js for API endpoints): **
