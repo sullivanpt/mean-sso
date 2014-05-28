@@ -58,7 +58,7 @@ Use any of the generator-angular-fullstack commands, especially:
 
 ** Heroku **
 * heroku config:add ROOT_URL=https://yourdomain.com
-* WebSockets are not supported
+* WebSockets: heroku labs:enable websockets
 
 ## Scenarios currently implemented and verified
 
